@@ -1,0 +1,17 @@
+{
+  "name": "매일 뇌운동",
+  "short_name": "뇌운동",
+  "description": "60가지 두뇌 게임으로 매일 머리를 깨워요",
+  "lang": "ko",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f1f4fb",
+  "theme_color": "#3d5afe",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
