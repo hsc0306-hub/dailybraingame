@@ -551,6 +551,29 @@ body{padding-bottom:env(safe-area-inset-bottom)}
 .nbadge{position:absolute;left:8px;top:8px;border-radius:8px;padding:2px 8px;font-size:12px;font-weight:900;letter-spacing:.02em;color:#fff;max-width:none!important;max-height:none!important;box-shadow:0 2px 4px #0003}
 .nbadge.new{background:#fa5252}.nbadge.up{background:#3d5afe}
 .upnote{margin:0;font-size:14px;font-weight:700;background:#edf2ff;color:#3b5bdb;border-radius:12px;padding:8px 12px}.upnote.new{background:#fff5f5;color:#e03131}
+/* ---- 마작 짝맞추기 ---- */
+.stage:has(.mjboard){background:linear-gradient(#2f9e5a,#1e7a45)}
+.mjtop{display:grid;gap:8px;justify-items:center;width:100%}
+.mjtray{display:grid;grid-template-columns:repeat(4,52px);gap:6px;background:linear-gradient(#ffc9d6,#f5a3b8);padding:8px 12px;border-radius:22px;box-shadow:inset 0 -4px 0 #d9768f,0 4px 8px #0003}
+.mjtray i{height:64px;border-radius:10px;background:#c2405f;box-shadow:inset 0 3px 6px #0005;display:grid;place-items:center}
+.mjt{width:48px;height:60px;border-radius:9px;background:#fffaf2;box-shadow:0 3px 0 #e9a8b6;display:grid;place-items:center;animation:drop .2s;padding:4px}
+.mjt svg{width:40px;height:50px;display:block}
+.mjcombo{display:flex;align-items:center;gap:8px;width:min(260px,80%)}
+.mjbar{position:relative;flex:1;height:14px;border-radius:99px;background:#0b4f2a}.mjbar i{position:absolute;inset:0 auto 0 0;border-radius:99px;background:#ffd43b}
+.mjbar span{position:absolute;inset:0;display:grid;place-items:center;font-size:11px;font-weight:900;color:#fff}
+.mjcombo b{color:#fff;font-weight:900;text-shadow:0 1px 2px #0006}
+.mjboard{position:relative;width:100%;max-width:400px}
+.mjtile{position:absolute;padding:5% 8%;border-radius:12%;background:#fffaf2;display:grid;place-items:center;box-shadow:3px 4px 0 #e9a8b6,4px 6px 0 #c96f86,5px 9px 8px #0004;border:1px solid #f3d6dc;transition:filter .15s}
+.mjtile,.mjt{grid-template-columns:100%;grid-template-rows:100%;justify-items:center;align-items:center}.mjtile svg{width:var(--sw);height:var(--sh);display:block}
+.mjtile.cov{filter:brightness(.68) saturate(.8)}
+.mjtile:not(.cov):active{transform:translateY(2px)}
+.mjtile.no{animation:shk .3s}
+.mjc{display:grid;line-height:1;font-weight:900;text-align:center;font-size:min(22px,5.6vw)}
+.mjh{font-weight:900;font-size:min(32px,8vw);line-height:1}
+.mje{font-size:min(30px,7.5vw);line-height:1}
+.mjbtns{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;width:100%;max-width:360px}
+.mjbtns .btn{display:grid;place-items:center;min-height:64px;font-size:24px;border-radius:50px;background:linear-gradient(#69db7c,#2f9e44);color:#fff;box-shadow:0 5px 0 #1e6b30;line-height:1.1}
+.mjbtns .btn small{font-size:12px;font-weight:800}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media(max-width:380px){.hex{width:80px;font-size:26px}.comb .hex{width:76px}.hmain{grid-template-columns:minmax(0,1fr) 90px}.mascot{width:90px;height:90px}}
 </style>
@@ -771,7 +794,7 @@ function bindTop(){
 
 const GOAL=5;
 /* --- 능력치 --- */
-const REF={mole:45,sort:40,match:30,pairs:30,hand:35,path:80,big:35,color:30,stack:40,jump:40,miss:30,shop:25,nback:40,simon:30,rps:35,ice:30,lotto:30,frog:60,type:60,potion:35,blocks:80,pixel:150,chosung:30,wordfind:40,flags:35,capitals:35,puzzle:40,hidden:40,blank:35,sumg:50,change:20,chain:20,clock:20,coins:20,balloon:30,bbq:25,lights:30,stroop:35,cipher:40,schulte:40,rhythm:60,scales:30,seq:30,maze:40,hanoi:30,rotate:30,diff:30,count:25,shadow:35,posmem:30,newitem:30,backdig:20,wordmem:30,ox:40,chainw:25,spell:25,proverb:30,antonym:25,idiom:30,scramble:40,engq:30};
+const REF={mole:45,sort:40,match:30,pairs:30,hand:35,path:80,big:35,color:30,stack:40,jump:40,miss:30,shop:25,nback:40,simon:30,rps:35,ice:30,lotto:30,frog:60,mahjong:40,type:60,potion:35,blocks:80,pixel:150,chosung:30,wordfind:40,flags:35,capitals:35,puzzle:40,hidden:40,blank:35,sumg:50,change:20,chain:20,clock:20,coins:20,balloon:30,bbq:25,lights:30,stroop:35,cipher:40,schulte:40,rhythm:60,scales:30,seq:30,maze:40,hanoi:30,rotate:30,diff:30,count:25,shadow:35,posmem:30,newitem:30,backdig:20,wordmem:30,ox:40,chainw:25,spell:25,proverb:30,antonym:25,idiom:30,scramble:40,engq:30};
 const SPDB=[1,1.1,1.2];
 const CATS=['집중력','사고력','관찰력','기억력','계산력','언어력'];
 const ability=id=>{const h=store.get('hist_'+id,[]);return h.length?Math.max(...h.slice(-5)):null};
@@ -916,6 +939,7 @@ const GAMES=[
 {id:'scramble',cat:'언어력',name:'글자 순서 맞추기',how:'뒤섞인 글자를 순서대로 눌러 낱말을 완성하세요. 처음엔 세 글자, 점점 긴 낱말이 나와요.',art:'<span style="font-size:20px;font-weight:900;color:#1b2240;line-height:1.15">거 자 전<br>→ 자전거</span>',run:scramble},
 {id:'engq',cat:'언어력',name:'영어 단어 퀴즈',how:'영어 단어를 보고 우리말 뜻을 고르세요. 점수가 오르면 거꾸로 우리말을 보고 영어 단어를 고르는 문제도 나와요.',art:'<span style="font-size:24px;font-weight:900;color:#1b2240;line-height:1.15">apple<br>= 사과</span>',run:engQuiz},
 {id:'frog',cat:'집중력',name:'개구리 길 건너기',noTimer:true,how:'개구리를 ▲◀▶▼ 버튼(또는 화면을 밀거나 톡 눌러서)으로 움직여 맨 위 연못까지 데려가세요. 차에 부딪히거나 강물에 빠지면 목숨이 줄어요. 강에서는 통나무를 타고 건너야 해요. 앞으로 한 칸 갈 때마다 1점, 도착하면 10점! 목숨 3개를 다 잃으면 끝나요.',art:`<svg viewBox="0 0 100 100"><rect x="6" y="6" width="88" height="88" rx="10" fill="#495057"/><rect x="6" y="6" width="88" height="30" rx="10" fill="#4dabf7"/><rect x="14" y="14" width="34" height="14" rx="7" fill="#a0522d"/><rect x="6" y="70" width="88" height="24" rx="10" fill="#69db7c"/><rect x="58" y="44" width="28" height="18" rx="5" fill="#ff6b6b"/><rect x="6" y="52" width="88" height="2" fill="#ffffffaa"/><ellipse cx="50" cy="80" rx="10" ry="11" fill="#51cf66"/><circle cx="45" cy="72" r="3.5" fill="#fff"/><circle cx="55" cy="72" r="3.5" fill="#fff"/><circle cx="45" cy="71.5" r="1.6" fill="#1b2240"/><circle cx="55" cy="71.5" r="1.6" fill="#1b2240"/></svg>`,run:frog},
+{id:'mahjong',cat:'관찰력',name:'마작 짝맞추기',time:120,how:'여러 층으로 쌓인 마작 타일 중 위가 덮이지 않은 밝은 타일을 눌러 위쪽 네 칸으로 옮기세요. 같은 그림 두 개가 모이면 사라져요. 네 칸이 다 차면 끝나니 조심! 빨리 연달아 맞추면 콤보로 점수가 커져요. 되돌리기·힌트·섞기 버튼도 쓸 수 있어요.',art:`<svg viewBox="0 0 100 100"><g>${[[14,30,0,'中','#c92a2a'],[42,30,0,'發','#2b8a3e'],[70,30,0,'九','#1c3faa'],[28,46,1,'中','#c92a2a'],[56,46,1,'東','#1b2240']].map(([x,y,z,t,col])=>`<rect x="${x+3}" y="${y+4}" width="24" height="30" rx="5" fill="#e9a8b6"/><rect x="${x}" y="${y}" width="24" height="30" rx="5" fill="#fffaf2" stroke="#f0c9d2" stroke-width="1.5"/><text x="${x+12}" y="${y+21}" font-size="16" font-weight="900" text-anchor="middle" fill="${col}">${t}</text>`).join('')}</g></svg>`,run:mahjong},
 {id:'lotto',cat:'기억력',name:'로또번호 기억하기',how:'뽑기 기계에서 나온 번호를 기억했다가 모두 골라 누르세요. 순서는 상관없어요.',art:`<svg viewBox="0 0 100 100"><g ${FONT} font-size="13" text-anchor="middle" fill="#fff">${[[26,50,8],[50,50,10],[74,50,20]].map(([x,y,n],k)=>`<circle cx="${x}" cy="${y}" r="15" fill="${BALLC[k]}"/><text x="${x}" y="${y+5}">${n}</text>`).join('')}</g></svg>`,time:90,run:lotto}
 ];
 
@@ -930,7 +954,7 @@ const NEWS={
  scales:{added:'2026-11-21'},seq:{added:'2026-11-21'},maze:{added:'2026-11-21'},hanoi:{added:'2026-11-21'},rotate:{added:'2026-11-21'},
  diff:{added:'2026-11-21'},count:{added:'2026-11-21'},shadow:{added:'2026-11-21'},posmem:{added:'2026-11-21'},newitem:{added:'2026-11-21'},backdig:{added:'2026-11-21'},wordmem:{added:'2026-11-21'},ox:{added:'2026-11-21'},
  chainw:{added:'2026-11-21'},spell:{added:'2026-11-21'},proverb:{added:'2026-11-21'},antonym:{added:'2026-11-21'},idiom:{added:'2026-11-21'},scramble:{added:'2026-11-21'},engq:{added:'2026-11-21'},
- frog:{added:'2026-11-22'},
+ frog:{added:'2026-11-22'},mahjong:{added:'2026-11-22'},
  path:{updated:'2026-11-21',note:'이름이 우왕좌왕길찾기로 바뀌고, 떨어졌다 다시 올라오기와 점프판이 생겼어요'},
  jump:{updated:'2026-11-21',note:'맨 아래 발판에서 출발하고, 시간 제한 없이 목숨 3개로 바뀌었어요'},
  stack:{updated:'2026-11-21',note:'시간 제한 없이, 블록을 놓치면 바로 끝나요'},
@@ -2432,6 +2456,71 @@ function frog(c){
   if(splash){splash.t-=dt;x.globalAlpha=Math.max(0,splash.t/.6);x.fillStyle=splash.why==='water'?'#fff':'#ffd43b';x.beginPath();x.arc((splash.x+.5)*cs,(splash.r+.5)*cs,cs*(.8-splash.t*.6),0,7);x.fill();x.globalAlpha=1;if(splash.t<=0)splash=null}
   if(!dead&&!(inv>0&&Math.floor(inv*10)%2)){const k=F.hop,px=(F.x+(F.fx-F.x)*k*0)+.5,ry=F.r+(F.fy-F.r)*k;drawFrog(px*cs,(ry+.5)*cs-Math.sin(k*Math.PI)*cs*.25,cs*(1+Math.sin(k*Math.PI)*.15),F.face)}
  });
+}
+
+
+/* --- 관찰력: 마작 짝맞추기 --- */
+function mahjong(c){
+ const CN='一二三四五六七八九';
+ const DOTP={1:[[2,2]],2:[[2,1],[2,3]],3:[[1,1],[2,2],[3,3]],4:[[1,1],[3,1],[1,3],[3,3]],5:[[1,1],[3,1],[2,2],[1,3],[3,3]],6:[[1,1],[3,1],[1,2],[3,2],[1,3],[3,3]],7:[[1,.7],[2,1.1],[3,1.5],[1,2.4],[3,2.4],[1,3.3],[3,3.3]],8:[[1,.8],[3,.8],[1,1.6],[3,1.6],[1,2.4],[3,2.4],[1,3.2],[3,3.2]],9:[[1,1],[2,1],[3,1],[1,2],[2,2],[3,2],[1,3],[2,3],[3,3]]};
+ const FACES=[];
+ for(let n=1;n<=9;n++)FACES.push({k:'d'+n,h:`<svg viewBox="0 0 40 48">${DOTP[n].map(([a,b],i)=>`<circle cx="${a*10}" cy="${b*11+2}" r="${n>6?4.3:5.2}" fill="none" stroke="${['#1971c2','#2b8a3e','#c92a2a'][(i+n)%3]}" stroke-width="3"/><circle cx="${a*10}" cy="${b*11+2}" r="1.6" fill="${['#1971c2','#2b8a3e','#c92a2a'][(i+n)%3]}"/>`).join('')}</svg>`});
+ for(let n=2;n<=9;n++)FACES.push({k:'b'+n,h:`<svg viewBox="0 0 40 48">${Array.from({length:n},(_,i)=>{const cols=n<=3?n:n<=6?Math.ceil(n/2):3,rows=Math.ceil(n/cols),r=Math.floor(i/cols),q=i%cols,w=34/cols;return`<rect x="${3+q*w+w/2-3}" y="${4+r*(40/rows)}" width="6" height="${40/rows-4}" rx="3" fill="${i===0&&n>4?'#c92a2a':'#2b8a3e'}"/><rect x="${3+q*w+w/2-3}" y="${4+r*(40/rows)+(40/rows-4)/2-1}" width="6" height="2" fill="#fff8"/>`}).join('')}</svg>`});
+ for(let n=1;n<=9;n++)FACES.push({k:'c'+n,h:`<span class="mjc"><b style="color:#1c3faa">${CN[n-1]}</b><b style="color:#c92a2a">萬</b></span>`});
+ [['中','#c92a2a'],['發','#2b8a3e'],['東','#1b2240'],['南','#1b2240'],['西','#1b2240'],['北','#1b2240']].forEach(([t,col])=>FACES.push({k:'h'+t,h:`<span class="mjh" style="color:${col}">${t}</span>`}));
+ ['🎸','🌸','🍀','⭐','🍎','🐞','🌙','🍄'].forEach(e=>FACES.push({k:'e'+e,h:`<span class="mje emo">${e}</span>`}));
+ const LAYOUTS=[
+  [[6,4,0,0],[3,2,1,1]],
+  [[6,5,0,0],[4,3,1,1],[2,1,3,3]],
+  [[6,6,0,0],[5,4,1,1],[3,2,3,3],[1,1,5,5]],
+  [[6,6,0,0],[5,5,1,1],[4,3,2,2],[2,2,4,4]]];
+ let lvl=0,T=[],tray=[],hist=[],uses,combo=0,mult=1,lastMatch=0,stuck=false;
+ const covered=(t,list=T)=>list.some(o=>!o.gone&&o!==t&&o.z>t.z&&Math.abs(o.x-t.x)<2&&Math.abs(o.y-t.y)<2);
+ const make=()=>{
+  const spec=LAYOUTS[Math.min(lvl,LAYOUTS.length-1)];let pos=[];
+  spec.forEach(([cw,rh,ox,oy],z)=>{for(let i=0;i<cw;i++)for(let j=0;j<rh;j++)pos.push({x:ox+i*2,y:oy+j*2,z})});
+  if(pos.length%2)pos.pop();
+  // 거꾸로 두 개씩 떼어 내며 같은 그림을 붙여서 항상 풀 수 있게 만들기
+  let ok=false;for(let tries=0;tries<200&&!ok;tries++){
+   const live=pos.map(p=>({...p,gone:false,f:null}));const faces=shuffle(FACES).slice(0,Math.min(FACES.length,Math.ceil(live.length/2/ (lvl<1?1.4:1.15))));ok=true;
+   for(let k=0;k<live.length/2;k++){const free=live.filter(t=>!t.gone&&!covered(t,live));if(free.length<2){ok=false;break}
+    const [a,b]=shuffle(free).slice(0,2),f=faces[k%faces.length];a.f=f;b.f=f;a.gone=b.gone=true}
+   if(ok)T=live.map((t,i)=>({...t,gone:false,id:i}))}
+  tray=[];hist=[];uses={undo:3,hint:3,shuf:2};combo=0;mult=1;stuck=false;draw()};
+ const draw=()=>{
+  c.prompt(`같은 그림 두 개를 위 칸에 모으세요 <small style="font-size:15px;color:var(--sub)">· ${lvl+1}단계</small>`);
+  c.el.innerHTML=`<div class="mjtop"><div class="mjtray">${[0,1,2,3].map(i=>`<i>${tray[i]?`<span class="mjt">${tray[i].f.h}</span>`:''}</i>`).join('')}</div>
+   <div class="mjcombo"><div class="mjbar"><i style="width:${combo/7*100}%"></i><span>${combo}/7</span></div><b>${mult.toFixed(1)}x</b></div></div>
+   <div class="mjboard" id="mb"></div>
+   <div class="mjbtns"><button class="btn" id="mu">↩<small>되돌리기 ${uses.undo}</small></button><button class="btn" id="mh">🔍<small>힌트 ${uses.hint}</small></button><button class="btn" id="ms">🔀<small>섞기 ${uses.shuf}</small></button></div>`;
+  const mb=c.el.querySelector('#mb'),live=T.filter(t=>!t.gone);
+  const maxX=Math.max(...T.map(t=>t.x))+2,maxY=Math.max(...T.map(t=>t.y))+2,W=mb.clientWidth,unit=Math.min(W/(maxX+.6),(Math.min(460,innerHeight*.55))/(maxY*1.2+.6)),tw=unit*2,th=unit*2.4,dz=Math.max(3,unit*.18);
+  mb.style.height=(maxY*unit*1.2+th*.2+dz*4)+'px';mb.style.setProperty('--sw',tw*.78+'px');mb.style.setProperty('--sh',th*.78+'px');
+  mb.innerHTML=live.sort((a,b)=>a.z-b.z||a.y-b.y||a.x-b.x).map(t=>{const cov=covered(t);return`<button class="cell mjtile${cov?' cov':''}" data-id="${t.id}" style="left:${t.x*unit+(4-t.z)*0+dz*(3-t.z)}px;top:${t.y*unit*1.2+dz*(3-t.z)}px;width:${tw}px;height:${th}px;z-index:${t.z*100+t.y*2+t.x}" aria-label="타일">${t.f.h}</button>`}).join('');
+  mb.querySelectorAll('.mjtile').forEach(b=>b.onclick=()=>pickTile(+b.dataset.id,b));
+  c.el.querySelector('#mu').onclick=undo;c.el.querySelector('#mh').onclick=()=>{if(uses.hint<=0){hToast('힌트를 다 썼어요');return}if(hint())uses.hint--;draw();hint()};
+  c.el.querySelector('#ms').onclick=()=>{if(uses.shuf<=0){hToast('섞기를 다 썼어요');return}uses.shuf--;const lv=T.filter(t=>!t.gone),fs=shuffle(lv.map(t=>t.f));lv.forEach((t,i)=>t.f=fs[i]);draw()};
+  ['mu','mh','ms'].forEach((id,i)=>{const k=['undo','hint','shuf'][i];if(uses[k]<=0)c.el.querySelector('#'+id).disabled=true})};
+ const hint=()=>{const free=T.filter(t=>!t.gone&&!covered(t));let pick=null;
+  for(const tr of tray){pick=free.find(t=>t.f.k===tr.f.k);if(pick)break}
+  if(!pick){for(const a of free){const b=free.find(x=>x!==a&&x.f.k===a.f.k);if(b){pick=a;const e=c.el.querySelector(`.mjtile[data-id="${b.id}"]`);if(e){e.classList.remove('hintg');void e.offsetWidth;e.classList.add('hintg')}break}}}
+  if(!pick)return false;const e=c.el.querySelector(`.mjtile[data-id="${pick.id}"]`);if(e){e.classList.remove('hintg');void e.offsetWidth;e.classList.add('hintg')}return true};
+ c.setHint(()=>{const r=hint();return r});
+ const pickTile=(id,el)=>{if(stuck)return;const t=T[id];if(t.gone)return;if(covered(t)){el.classList.remove('no');void el.offsetWidth;el.classList.add('no');return}
+  if(tray.length>=4)return;
+  t.gone=true;const same=tray.findIndex(x=>x.f.k===t.f.k);
+  if(same>=0){const pair=tray.splice(same,1)[0];hist=hist.filter(h=>h!==pair);
+   const now=Date.now();combo=now-lastMatch<6000?combo+1:1;lastMatch=now;if(combo>=7){combo=0;mult=Math.min(3,mult+.5);hToast(`콤보! ${mult.toFixed(1)}배`)}
+   c.ok(Math.round(mult));
+   if(T.every(x=>x.gone)){c.ok(5+lvl*2);draw();c.prompt('모두 맞췄어요!');lvl++;c.later(make,1200);return}}
+  else{tray.push(t);hist.push(t)}
+  draw();
+  if(tray.length>=4){stuck=true;
+   if(uses.undo>0){c.prompt('칸이 가득 찼어요! ↩ 되돌리기로 살려 보세요')}
+   else{c.prompt('칸이 가득 찼어요!');c.later(c.end,1400)}}};
+ const undo=()=>{if(uses.undo<=0||!hist.length){hToast(hist.length?'되돌리기를 다 썼어요':'되돌릴 타일이 없어요');return}
+  const t=hist.pop();tray.splice(tray.indexOf(t),1);t.gone=false;uses.undo--;stuck=false;draw()};
+ make();
 }
 
 home();
