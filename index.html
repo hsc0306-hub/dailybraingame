@@ -574,6 +574,7 @@ body{padding-bottom:env(safe-area-inset-bottom)}
 .mjbtns{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;width:100%;max-width:360px}
 .mjbtns .btn{display:grid;place-items:center;min-height:64px;font-size:24px;border-radius:50px;background:linear-gradient(#69db7c,#2f9e44);color:#fff;box-shadow:0 5px 0 #1e6b30;line-height:1.1}
 .mjbtns .btn small{font-size:12px;font-weight:800}
+.hbtn.snd{padding:4px 10px;font-size:16px}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media(max-width:380px){.hex{width:80px;font-size:26px}.comb .hex{width:76px}.hmain{grid-template-columns:minmax(0,1fr) 90px}.mascot{width:90px;height:90px}}
 </style>
@@ -992,12 +993,14 @@ function home(){
  <div class="goal"><div class="gt">오늘의 뇌운동 <span>${n} / ${GOAL}판</span></div><div class="bar"><i style="width:${n/GOAL*100}%"></i></div>
  <div class="act"><button class="cta" id="rand">추천 게임 시작</button></div></div></header>
  <div class="pad">${attCard()}${abilityCard()}<div class="speed"><b>게임 속도</b><div class="seg">${SPEEDS.map((s,k)=>`<button class="${k===spd?'on':''}" data-s="${k}">${s[0]}</button>`).join('')}</div></div>
+ <div class="speed"><b>소리</b><div class="seg snd"><button class="${Snd.pref.bgm?'on':''}" data-k="bgm" aria-pressed="${Snd.pref.bgm}">🎵 배경음악</button><button class="${Snd.pref.fx?'on':''}" data-k="fx" aria-pressed="${Snd.pref.fx}">🔔 효과음</button></div></div>
  <div class="sec"><h2>모든 게임</h2><span>${list.length}개</span></div>
  <div class="chips">${tabs.map(t=>`<button class="${t===tab?'on':''}" data-t="${t}">${t==='전체'?'':t==='새 소식'?'🆕 ':t==='좋아요'?'👍 ':t==='싫어요'?'👎 ':icon(t,t===tab?'currentColor':CATC[t])}${t}${t==='새 소식'?` ${nNew}`:t==='좋아요'?` ${nUp}`:t==='싫어요'?` ${nDn}`:''}</button>`).join('')}</div>
  ${(tab==='좋아요'||tab==='싫어요')&&!list.length?`<p class="empty">${tab==='좋아요'?'아직 좋아요한 게임이 없어요. 게임 설명이나 결과 화면에서 👍를 눌러 보세요.':'싫어요로 분류한 게임이 없어요.'}</p>`:''}
  <div class="grid2">${list.map(g=>{const b=store.get('best_'+g.id,null);return `<button class="gcard" data-id="${g.id}" style="--cc:${CATC[g.cat]}"><div class="thumb">${g.art}${badgeEl(g)}${V[g.id]?`<span class="vmark">${V[g.id]===1?'👍':'👎'}</span>`:''}</div><div class="meta"><span class="tag">${icon(g.cat)}${g.cat}</span>${b==null?'':`<span class="best">최고 ${b}</span>`}<div class="nm">${g.name}</div></div></button>`}).join('')}</div></div>`;
  app.querySelectorAll('.chips button').forEach(b=>b.onclick=()=>{tab=b.dataset.t;home()});
- app.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{spd=+b.dataset.s;store.set('spd',spd);app.querySelectorAll('.seg button').forEach(x=>x.classList.toggle('on',x===b))});
+ app.querySelectorAll('.seg.snd button').forEach(b=>b.onclick=()=>{const k=b.dataset.k,on=!Snd.pref[k];if(k==='bgm')Snd.toggleBgm(on);else Snd.toggleFx(on);b.classList.toggle('on',on);b.setAttribute('aria-pressed',on);if(on){Snd.ctx();Snd.fx('ok')}});
+ app.querySelectorAll('.seg:not(.snd) button').forEach(b=>b.onclick=()=>{spd=+b.dataset.s;store.set('spd',spd);app.querySelectorAll('.seg button').forEach(x=>x.classList.toggle('on',x===b))});
  app.querySelectorAll('.gcard').forEach(b=>b.onclick=()=>intro(GAMES.find(g=>g.id===b.dataset.id)));
  $('#rand').onclick=()=>intro(pick(GAMES.filter(g=>votes()[g.id]!==-1)));
  const wk=$('#weak');if(wk)wk.onclick=()=>intro(pick(GAMES.filter(g=>g.cat===wk.dataset.c)));
@@ -1014,7 +1017,53 @@ function intro(g){
 
 /* --- runner --- */
 let run=null;
-function stopRun(){document.onkeydown=document.onkeyup=null;if(!run)return;run.alive=false;run.cl.forEach(f=>{try{f()}catch(e){}});run.t.forEach(clearTimeout);run.i.forEach(clearInterval);run=null}
+
+/* ===== 소리: 배경음악(BGM)과 효과음 — 파일 없이 브라우저에서 직접 만들어요 ===== */
+const Snd={
+ ac:null,master:null,bgmG:null,fxG:null,timer:null,step:0,next:0,song:null,
+ pref:store.get('snd',{bgm:true,fx:true}),
+ save(){store.set('snd',this.pref)},
+ ctx(){if(!this.ac){const A=window.AudioContext||window.webkitAudioContext;if(!A)return null;this.ac=new A();
+   this.master=this.ac.createGain();this.master.gain.value=.8;this.master.connect(this.ac.destination);
+   this.bgmG=this.ac.createGain();this.bgmG.gain.value=.22;this.bgmG.connect(this.master);
+   this.fxG=this.ac.createGain();this.fxG.gain.value=.5;this.fxG.connect(this.master)}
+  if(this.ac.state==='suspended')this.ac.resume();return this.ac},
+ note(freq,t,dur,{type='triangle',vol=.3,out,attack=.01,glide}={}){const a=this.ac;if(!a)return;
+  const o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.setValueAtTime(freq,t);if(glide)o.frequency.exponentialRampToValueAtTime(glide,t+dur);
+  g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(vol,t+attack);g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  o.connect(g).connect(out||this.fxG);o.start(t);o.stop(t+dur+.05)},
+ hz:m=>440*Math.pow(2,(m-69)/12),
+ /* 효과음 */
+ fx(kind){if(!this.pref.fx||!this.ctx())return;const t=this.ac.currentTime,h=this.hz,N=(f,d,o,off=0)=>this.note(f,t+off,d,o);
+  if(kind==='ok'){N(h(84),.12,{vol:.35});N(h(91),.18,{vol:.3},.07)}
+  else if(kind==='big'){[72,76,79,84].forEach((m,i)=>N(h(m),.22,{vol:.3},i*.07))}
+  else if(kind==='bad'){N(220,.22,{type:'square',vol:.12,glide:140});N(180,.25,{type:'sawtooth',vol:.06,glide:110},.05)}
+  else if(kind==='tap'){N(h(96),.05,{type:'sine',vol:.12})}
+  else if(kind==='tick'){N(h(88),.06,{type:'square',vol:.06})}
+  else if(kind==='help'){[79,83,86].forEach((m,i)=>N(h(m),.15,{type:'sine',vol:.25},i*.05))}
+  else if(kind==='end'){[[72,0],[76,.12],[79,.24],[84,.36],[79,.6],[84,.72]].forEach(([m,o],i)=>N(h(m),i>3?.5:.16,{vol:.3},o))}
+  else if(kind==='start'){[67,72].forEach((m,i)=>N(h(m),.14,{type:'sine',vol:.25},i*.09))}},
+ /* 배경음악: 분야마다 조·빠르기가 다르고, 게임마다 멜로디가 달라요 */
+ start(g){this.stop();if(!this.pref.bgm||!this.ctx())return;
+  const CAT={집중력:[62,132],사고력:[57,96],관찰력:[60,108],기억력:[65,92],계산력:[64,116],언어력:[67,100]}[g.cat]||[60,104];
+  let seed=[...g.id].reduce((a,ch)=>a*31+ch.charCodeAt(0)>>>0,7);const r=()=>(seed=(seed*1103515245+12345)>>>0)/4294967296;
+  const pent=[0,2,4,7,9,12,14,16],prog=[[0,4,7],[7,11,14],[9,12,16],[5,9,12]];
+  const mel=Array.from({length:64},(_,i)=>i%2&&r()<.55?null:(r()<.18?null:pent[Math.floor(r()*pent.length)]));
+  this.song={key:CAT[0],spb:60/CAT[1]/2,prog,mel};this.step=0;this.next=this.ac.currentTime+.15;
+  this.timer=setInterval(()=>this.sched(),80)},
+ sched(){const a=this.ac,s=this.song;if(!a||!s)return;
+  while(this.next<a.currentTime+.3){const i=this.step%64,bar=Math.floor(i/16),ch=s.prog[bar],t=this.next,k=s.key,h=this.hz,o=this.bgmG;
+   if(i%8===0)this.note(h(k-12+ch[0]),t,s.spb*3.5,{type:'sine',vol:.5,out:o,attack:.02});
+   if(i%4===2)ch.forEach(n=>this.note(h(k+n),t,s.spb*1.2,{type:'triangle',vol:.12,out:o,attack:.02}));
+   if(i%2===0&&s.mel[i]!=null)this.note(h(k+12+s.mel[i]),t,s.spb*1.6,{type:'triangle',vol:.22,out:o,attack:.015});
+   if(i%4===0)this.note(1800,t,.03,{type:'square',vol:.025,out:o});
+   this.next+=s.spb;this.step++}},
+ stop(){clearInterval(this.timer);this.timer=null;this.song=null},
+ toggleBgm(on,g){this.pref.bgm=on;this.save();if(on&&g)this.start(g);else this.stop()},
+ toggleFx(on){this.pref.fx=on;this.save()}
+};
+
+function stopRun(){Snd.stop();document.onkeydown=document.onkeyup=null;if(!run)return;run.alive=false;run.cl.forEach(f=>{try{f()}catch(e){}});run.t.forEach(clearTimeout);run.i.forEach(clearInterval);run=null}
 function play(g){
  stopRun();window.scrollTo(0,0);
  app.style.setProperty('--cc',CATC[g.cat]);
@@ -1036,10 +1085,10 @@ function play(g){
   end:()=>finish(g,R.score),
   onStop:f=>R.cl.push(f),
   setHint:f=>{R.hint=f;drawH()},setLife:f=>{R.life=f;drawH()},
-  ok:(n=1)=>{R.score+=n;bump();fx('+'+n,'#12b886')},
-  bad:(n=0)=>{if(n){R.score=Math.max(0,R.score-n);bump()}fx(n?'−'+n:'땡!','#fa5252');pl.classList.remove('shake');void pl.offsetWidth;pl.classList.add('shake')}
+  ok:(n=1)=>{R.score+=n;bump();Snd.fx(n>=5?'big':'ok');fx('+'+n,'#12b886')},
+  bad:(n=0)=>{Snd.fx('bad');if(n){R.score=Math.max(0,R.score-n);bump()}fx(n?'−'+n:'땡!','#fa5252');pl.classList.remove('shake');void pl.offsetWidth;pl.classList.add('shake')}
  };
- const tick=()=>{const total=total0+R.extra*1000,left=Math.max(0,total-(Date.now()-t0));sec.textContent=Math.ceil(left/1000)+'초';tb.style.width=Math.min(100,left/total0*100)+'%';tb.classList.toggle('low',left<10000);if(left<=0)finish(g,R.score)};
+ const tick=()=>{const total=total0+R.extra*1000,left=Math.max(0,total-(Date.now()-t0));sec.textContent=Math.ceil(left/1000)+'초';tb.style.width=Math.min(100,left/total0*100)+'%';tb.classList.toggle('low',left<10000);const sl=Math.ceil(left/1000);if(left>0&&left<10000&&sl!==R.ls){R.ls=sl;Snd.fx('tick')}if(left<=0)finish(g,R.score)};
  if(!g.noTimer){tick();R.i.push(setInterval(tick,200))}
  $('#quit').onclick=home;
  /* --- 포인트 게임 도우미 --- */
@@ -1048,19 +1097,23 @@ function play(g){
   if(!g.noTimer)items.push(['time','⏱','+10초',30,R.tUsed<3,`${3-R.tUsed}번`]);
   if(R.life)items.push(['life','❤️','목숨+1',50,R.lUsed<2,`${2-R.lUsed}번`]);
   if(R.hint)items.push(['hint','💡','힌트',20,true,'']);
-  HB.innerHTML=items.length?`<span class="hw"><span class="coin">P</span>${wallet.toLocaleString()}</span>`+items.map(([k,ic,nm,cost,ok,left])=>`<button class="hbtn" data-k="${k}" data-c="${cost}"${ok&&wallet>=cost?'':' disabled'}>${ic} ${nm}<small>${cost}P${left?' · '+left:''}</small></button>`).join(''):'';
-  HB.querySelectorAll('.hbtn').forEach(b=>b.onclick=()=>useH(b.dataset.k,+b.dataset.c))}
+  const sOn=Snd.pref.bgm||Snd.pref.fx;
+  HB.innerHTML=`<button class="hbtn snd" id="sndb" aria-label="소리 켜기/끄기">${sOn?'🔊':'🔇'}</button>`+(items.length?`<span class="hw"><span class="coin">P</span>${wallet.toLocaleString()}</span>`+items.map(([k,ic,nm,cost,ok,left])=>`<button class="hbtn" data-k="${k}" data-c="${cost}"${ok&&wallet>=cost?'':' disabled'}>${ic} ${nm}<small>${cost}P${left?' · '+left:''}</small></button>`).join(''):'');
+  HB.querySelectorAll('.hbtn:not(.snd)').forEach(b=>b.onclick=()=>useH(b.dataset.k,+b.dataset.c));
+  $('#sndb').onclick=()=>{const on=!(Snd.pref.bgm||Snd.pref.fx);Snd.pref.fx=on;Snd.toggleBgm(on,g.id==='rhythm'?null:g);drawH()}}
  function useH(k,cost){if(!R.alive)return;if(wallet<cost){hToast('포인트가 부족해요');return}
   let done=false;
   if(k==='time'&&R.tUsed<3){R.extra+=10;R.tUsed++;tick();done=true;fx('+10초','#228be6')}
   else if(k==='life'&&R.lUsed<2&&R.life){done=R.life()!==false;if(done){R.lUsed++;fx('목숨 +1','#fa5252')}}
   else if(k==='hint'&&R.hint){done=R.hint()!==false;if(!done)hToast('지금은 쓸 힌트가 없어요')}
-  if(done){wallet-=cost;store.set('wallet',wallet)}drawH()}
+  if(done){wallet-=cost;store.set('wallet',wallet);Snd.fx('help')}drawH()}
+ pl.addEventListener('pointerdown',e=>{if(e.target.closest('button'))Snd.fx('tap')},true);
+ Snd.fx('start');if(g.id!=='rhythm')Snd.start(g);
  g.run(c);drawH();
 }
 const hToast=m=>{let t=document.getElementById('htoast');if(!t){t=document.createElement('div');t.id='htoast';document.body.appendChild(t)}t.textContent=m;t.className='show';clearTimeout(t._h);t._h=setTimeout(()=>t.className='',1800)};
 function finish(g,score){
- stopRun();window.scrollTo(0,0);
+ stopRun();Snd.fx('end');window.scrollTo(0,0);
  const key='best_'+g.id,prev=store.get(key,null),better=prev==null||score>prev;
  if(better)store.set(key,score);
  const before=catVals();{const h=store.get('hist_'+g.id,[]);h.push(Math.min(100,Math.round(score/REF[g.id]*100*SPDB[spd])));store.set('hist_'+g.id,h.slice(-10))}
