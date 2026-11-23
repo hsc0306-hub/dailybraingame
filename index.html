@@ -536,6 +536,8 @@ body{padding-bottom:env(safe-area-inset-bottom)}
 /* ---- 좋아요·싫어요 ---- */
 .vote{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%}
 .vb{border:2px solid var(--line);background:var(--card);border-radius:14px;min-height:46px;font-weight:800;font-size:15px;cursor:pointer;color:var(--ink)}
+.vb .vn{font-weight:900;margin-left:2px}.vnote{grid-column:1/-1;margin:6px 0 0;font-size:12.5px;color:var(--sub);text-align:center}
+.gcard .vc{display:flex;gap:8px;font-size:12.5px;font-weight:800;color:#868e96;min-height:0}.gcard .vc:empty{display:none}.gcard .vc .u{color:#0ca678}.gcard .vc .d{color:#e8590c}
 .vb.up.on{border-color:#12b886;background:#e6fcf5;color:#087f5b}.vb.dn.on{border-color:#fa5252;background:#fff5f5;color:#c92a2a}
 .vq{width:100%;display:grid;gap:6px;margin-top:4px}.vq small{color:var(--sub);font-weight:700}
 .vmark{position:absolute;right:8px;top:8px;width:30px;height:30px;border-radius:50%;background:#fff;display:grid;place-items:center;font-size:16px;box-shadow:0 2px 6px #0002;max-width:none!important;max-height:none!important}
@@ -646,7 +648,8 @@ const Cloud={
   this.applying=true;for(const k in M)store.set(k,M[k]);this.applying=false;localStorage.setItem('owner',this.user.id);reloadVars();await this.push();
  },
  dirty(){if(!this.user||this.applying)return;clearTimeout(this.timer);this.timer=setTimeout(()=>this.push(),1200)},
- async push(){if(!this.user)return;const{error}=await this.sb.from('user_state').upsert({user_id:this.user.id,data:this.keys(),updated_at:new Date().toISOString()});if(error)console.warn(error)},
+ async push(){if(!this.user)return;const{error}=await this.sb.from('user_state').upsert({user_id:this.user.id,data:this.keys(),updated_at:new Date().toISOString()});if(error)console.warn(error);
+  const vj=JSON.stringify(votes()),tag=this.user.id+vj;if(this.vsync!==tag){const r=await this.sb.rpc('sync_votes',{p:votes()});if(r.error)console.warn('sync_votes',r.error);else{this.vsync=tag;loadVC(true)}}},
  async score(game,score){if(!this.user)return;const{error}=await this.sb.from('scores').insert({user_id:this.user.id,game_id:game,score});if(error)console.warn(error)},
  async checkIn(){
   const{data,error}=await this.sb.rpc('check_in');if(error){console.warn(error);return}
@@ -982,18 +985,29 @@ const badgeEl=g=>{const b=badgeOf(g);return b==='new'?'<span class="nbadge new">
 let tab='전체';
 /* --- 좋아요·싫어요 --- */
 const votes=()=>store.get('vote',{});
-const setVote=(id,v)=>{const o=votes();if(o[id]===v)delete o[id];else o[id]=v;store.set('vote',o)};
-const voteBar=g=>{const v=votes()[g.id];return`<div class="vote" data-g="${g.id}"><button class="vb up${v===1?' on':''}" data-v="1" aria-pressed="${v===1}">👍 좋아요</button><button class="vb dn${v===-1?' on':''}" data-v="-1" aria-pressed="${v===-1}">👎 싫어요</button></div>`};
+/* 모두의 좋아요·싫어요 수 (서버에서 집계) */
+let VC=store.get('vc',{}),vcAt=0;
+const vcOf=id=>VC[id]||[0,0];
+const paintVC=(root=document)=>{root.querySelectorAll('[data-vc]').forEach(e=>{const[u,d]=vcOf(e.dataset.vc);e.innerHTML=u||d?`<span class="u">👍 ${u}</span><span class="d">👎 ${d}</span>`:''});
+ root.querySelectorAll('.vote').forEach(w=>{const[u,d]=vcOf(w.dataset.g);w.querySelector('.vb.up .vn').textContent=u;w.querySelector('.vb.dn .vn').textContent=d})};
+const loadVC=async(force)=>{if(!Cloud.on||!Cloud.sb)return;if(!force&&Date.now()-vcAt<60000)return;vcAt=Date.now();
+ try{const{data,error}=await Cloud.sb.rpc('vote_counts');if(error)throw error;VC={};(data||[]).forEach(r=>VC[r.game_id]=[+r.up||0,+r.down||0]);localStorage.setItem('vc',JSON.stringify(VC));paintVC()}catch(e){console.warn('vote_counts',e)}};
+const setVote=(id,v)=>{const o=votes(),old=o[id]||0;if(o[id]===v)delete o[id];else o[id]=v;const nw=o[id]||0;
+ if(Cloud.user){const c=vcOf(id).slice();if(old===1)c[0]--;if(old===-1)c[1]--;if(nw===1)c[0]++;if(nw===-1)c[1]++;VC[id]=[Math.max(0,c[0]),Math.max(0,c[1])]}
+ store.set('vote',o)};
+const voteBar=g=>{const v=votes()[g.id];return`<div class="vote" data-g="${g.id}"><button class="vb up${v===1?' on':''}" data-v="1" aria-pressed="${v===1}">👍 좋아요 <b class="vn">${vcOf(g.id)[0]}</b></button><button class="vb dn${v===-1?' on':''}" data-v="-1" aria-pressed="${v===-1}">👎 싫어요 <b class="vn">${vcOf(g.id)[1]}</b></button></div>${Cloud.user?'<p class="vnote">숫자는 모든 사람이 누른 수예요</p>':Cloud.on?'<p class="vnote">숫자는 모든 사람이 누른 수예요 · 로그인하면 내 표도 더해져요</p>':''}`};
 const bindVote=root=>root.querySelectorAll('.vote').forEach(w=>w.querySelectorAll('.vb').forEach(b=>b.onclick=()=>{setVote(w.dataset.g,+b.dataset.v);const v=votes()[w.dataset.g];
- w.querySelectorAll('.vb').forEach(x=>{const on=+x.dataset.v===v;x.classList.toggle('on',on);x.setAttribute('aria-pressed',on)});
+ w.querySelectorAll('.vb').forEach(x=>{const on=+x.dataset.v===v;x.classList.toggle('on',on);x.setAttribute('aria-pressed',on)});paintVC();
  (typeof toast==='function'?toast:hToast)(v===1?'좋아요 목록에 담았어요':v===-1?'싫어요로 분류했어요. 추천에서 빠져요':'분류를 지웠어요')}));
 function home(){
  stopRun();
  const V=votes(),nUp=GAMES.filter(g=>V[g.id]===1).length,nDn=GAMES.filter(g=>V[g.id]===-1).length;
  const nNew=GAMES.filter(g=>badgeOf(g)).length;
- const tabs=['전체',...(nNew?['새 소식']:[]),'좋아요','싫어요',...Object.keys(CATC)];
+ const hasVC=GAMES.some(g=>vcOf(g.id)[0]||vcOf(g.id)[1]);
+ const tabs=['전체',...(nNew?['새 소식']:[]),...(Cloud.on?['인기']:[]),'좋아요','싫어요',...Object.keys(CATC)];if(tab==='인기'&&!Cloud.on)tab='전체';
  const rankV=g=>V[g.id]===1?0:V[g.id]===-1?2:1;
- const list=GAMES.filter(g=>tab==='전체'||(tab==='새 소식'?!!badgeOf(g):tab==='좋아요'?V[g.id]===1:tab==='싫어요'?V[g.id]===-1:g.cat===tab)).map((g,i)=>[g,i]).sort((a,b)=>tab==='새 소식'?(((b[0].updated>b[0].added?b[0].updated:b[0].added)||'').localeCompare((a[0].updated>a[0].added?a[0].updated:a[0].added)||'')||(badgeOf(a[0])==='new'?-1:1)):(rankV(a[0])-rankV(b[0])||a[1]-b[1])).map(x=>x[0]);
+ const pop=g=>{const[u,d]=vcOf(g.id);return u-d};
+ const list=GAMES.filter(g=>tab==='전체'||tab==='인기'||(tab==='새 소식'?!!badgeOf(g):tab==='좋아요'?V[g.id]===1:tab==='싫어요'?V[g.id]===-1:g.cat===tab)).map((g,i)=>[g,i]).sort((a,b)=>tab==='인기'?(pop(b[0])-pop(a[0])||vcOf(b[0].id)[0]-vcOf(a[0].id)[0]||a[1]-b[1]):tab==='새 소식'?(((b[0].updated>b[0].added?b[0].updated:b[0].added)||'').localeCompare((a[0].updated>a[0].added?a[0].updated:a[0].added)||'')||(badgeOf(a[0])==='new'?-1:1)):(rankV(a[0])-rankV(b[0])||a[1]-b[1])).map(x=>x[0]);
  const n=Math.min(GOAL,day.n);
  app.innerHTML=`<header class="hero"><div class="hrow"><span class="brand">매일 뇌운동</span><span class="hr">${isStandalone()?'':'<button class="inst" id="instb">앱 설치</button>'}<span class="pts"><span class="coin">P</span>${wallet.toLocaleString()}</span>${acctChip()}</span></div>
  <div class="hmain"><div><h1>${n>=GOAL?'오늘 목표 달성!':'오늘도 머리를<br>깨워 볼까요?'}</h1><p>${n>=GOAL?'내일 또 만나요. 더 해도 좋아요.':'게임 '+GOAL+'판이 오늘의 목표예요'}</p></div>${MASCOT}</div>
@@ -1002,12 +1016,13 @@ function home(){
  <div class="pad">${attCard()}${abilityCard()}<div class="speed"><b>게임 속도</b><div class="seg">${SPEEDS.map((s,k)=>`<button class="${k===spd?'on':''}" data-s="${k}">${s[0]}</button>`).join('')}</div></div>
  <div class="speed"><b>소리</b><div class="seg snd"><button class="${Snd.pref.bgm?'on':''}" data-k="bgm" aria-pressed="${Snd.pref.bgm}">🎵 배경음악</button><button class="${Snd.pref.fx?'on':''}" data-k="fx" aria-pressed="${Snd.pref.fx}">🔔 효과음</button></div></div>
  <div class="sec"><h2>모든 게임</h2><span>${list.length}개</span></div>
- <div class="chips">${tabs.map(t=>`<button class="${t===tab?'on':''}" data-t="${t}">${t==='전체'?'':t==='새 소식'?'🆕 ':t==='좋아요'?'👍 ':t==='싫어요'?'👎 ':icon(t,t===tab?'currentColor':CATC[t])}${t}${t==='새 소식'?` ${nNew}`:t==='좋아요'?` ${nUp}`:t==='싫어요'?` ${nDn}`:''}</button>`).join('')}</div>
- ${(tab==='좋아요'||tab==='싫어요')&&!list.length?`<p class="empty">${tab==='좋아요'?'아직 좋아요한 게임이 없어요. 게임 설명이나 결과 화면에서 👍를 눌러 보세요.':'싫어요로 분류한 게임이 없어요.'}</p>`:''}
- <div class="grid2">${list.map(g=>{const b=store.get('best_'+g.id,null);return `<button class="gcard" data-id="${g.id}" style="--cc:${CATC[g.cat]}"><div class="thumb">${g.art}${badgeEl(g)}${V[g.id]?`<span class="vmark">${V[g.id]===1?'👍':'👎'}</span>`:''}</div><div class="meta"><span class="tag">${icon(g.cat)}${g.cat}</span>${b==null?'':`<span class="best">최고 ${b}</span>`}<div class="nm">${g.name}</div></div></button>`}).join('')}</div></div>`;
+ <div class="chips">${tabs.map(t=>`<button class="${t===tab?'on':''}" data-t="${t}">${t==='전체'?'':t==='새 소식'?'🆕 ':t==='인기'?'🔥 ':t==='좋아요'?'👍 ':t==='싫어요'?'👎 ':icon(t,t===tab?'currentColor':CATC[t])}${t}${t==='새 소식'?` ${nNew}`:t==='좋아요'?` ${nUp}`:t==='싫어요'?` ${nDn}`:''}</button>`).join('')}</div>
+ ${tab==='인기'?`<p class="empty" style="padding:4px 0 10px">${hasVC?'모든 사람이 누른 👍가 많은 순서예요':'아직 아무도 표를 누르지 않았어요. 게임 설명이나 결과 화면에서 👍를 눌러 보세요.'}</p>`:''}${(tab==='좋아요'||tab==='싫어요')&&!list.length?`<p class="empty">${tab==='좋아요'?'아직 좋아요한 게임이 없어요. 게임 설명이나 결과 화면에서 👍를 눌러 보세요.':'싫어요로 분류한 게임이 없어요.'}</p>`:''}
+ <div class="grid2">${list.map(g=>{const b=store.get('best_'+g.id,null);return `<button class="gcard" data-id="${g.id}" style="--cc:${CATC[g.cat]}"><div class="thumb">${g.art}${badgeEl(g)}${V[g.id]?`<span class="vmark">${V[g.id]===1?'👍':'👎'}</span>`:''}</div><div class="meta"><span class="tag">${icon(g.cat)}${g.cat}</span>${b==null?'':`<span class="best">최고 ${b}</span>`}<div class="nm">${g.name}</div><span class="vc" data-vc="${g.id}"></span></div></button>`}).join('')}</div></div>`;
+ paintVC(app);loadVC();
  app.querySelectorAll('.chips button').forEach(b=>b.onclick=()=>{tab=b.dataset.t;home()});
  app.querySelectorAll('.seg.snd button').forEach(b=>b.onclick=()=>{const k=b.dataset.k,on=!Snd.pref[k];if(k==='bgm')Snd.toggleBgm(on);else Snd.toggleFx(on);b.classList.toggle('on',on);b.setAttribute('aria-pressed',on);if(on){Snd.ctx();Snd.fx('ok')}});
- app.querySelectorAll('.seg:not(.snd) button').forEach(b=>b.onclick=()=>{spd=+b.dataset.s;store.set('spd',spd);app.querySelectorAll('.seg button').forEach(x=>x.classList.toggle('on',x===b))});
+ app.querySelectorAll('.seg:not(.snd) button').forEach(b=>b.onclick=()=>{spd=+b.dataset.s;store.set('spd',spd);app.querySelectorAll('.seg:not(.snd) button').forEach(x=>x.classList.toggle('on',x===b))});
  app.querySelectorAll('.gcard').forEach(b=>b.onclick=()=>intro(GAMES.find(g=>g.id===b.dataset.id)));
  $('#rand').onclick=()=>intro(pick(GAMES.filter(g=>votes()[g.id]!==-1)));
  const wk=$('#weak');if(wk)wk.onclick=()=>intro(pick(GAMES.filter(g=>g.cat===wk.dataset.c)));
@@ -1019,7 +1034,7 @@ function intro(g){
  app.innerHTML=`<div class="intro" style="--cc:${CATC[g.cat]}"><div class="thumb">${g.art}</div><div class="in"><span class="tag">${icon(g.cat)}${g.cat}</span><h2>${g.name}</h2>
  <div class="how">${g.how}</div><div class="facts"><span>${g.noTimer?'시간 제한 없음':'제한 시간 '+(g.time||60)+'초'}</span><span>속도 ${SPEEDS[spd][0]}</span><span>${b==null?'첫 도전':'최고 '+b+'점'}</span></div>${fresh(g.added)?`<p class="upnote new">🆕 새로 나온 게임이에요</p>`:fresh(g.updated)&&g.note?`<p class="upnote">🔧 업데이트: ${g.note}</p>`:''}${voteBar(g)}<p class="hnote">💰 게임 중에 모은 포인트로 도우미(${g.noTimer?'':'⏱시간 +10초 · '}💡힌트 · ❤️목숨)를 쓸 수 있어요 · 지금 ${wallet.toLocaleString()}P</p></div>
  <div class="two"><button class="cta soft" id="bk">목록</button><button class="cta" id="go" style="background:var(--cc);box-shadow:0 4px 0 color-mix(in srgb,var(--cc) 70%,#000)">시작하기</button></div></div>`;
- $('#bk').onclick=home;$('#go').onclick=()=>play(g);bindVote(app);markSeen(g);
+ $('#bk').onclick=home;$('#go').onclick=()=>play(g);bindVote(app);markSeen(g);loadVC();
 }
 
 /* --- runner --- */
@@ -1136,7 +1151,7 @@ function finish(g,score){
  <div class="rbox"><b>${g.cat} 능력치 ${before[ci]==null?'첫 측정':before[ci]+' → '}<em style="color:${CATC[g.cat]}">${after[ci]}</em></b>${radar(after,before)}</div>
  ${Cloud.on?`<button class="cta soft" id="rkr" style="width:100%">🏆 이 게임 순위 보기</button>`:''}
  <div class="two"><button class="cta soft" id="hm">목록</button><button class="cta" id="ag">한 번 더</button></div></div>`;
- $('#hm').onclick=home;$('#ag').onclick=()=>play(g);bindVote(app);const rr=$('#rkr');if(rr)rr.onclick=()=>rankView(g.id);
+ $('#hm').onclick=home;$('#ag').onclick=()=>play(g);bindVote(app);loadVC();const rr=$('#rkr');if(rr)rr.onclick=()=>rankView(g.id);
 }
 
 /* --- games --- */
