@@ -418,6 +418,23 @@ button{font:inherit;color:inherit}
 #asv .ag polyline{fill:none;stroke:#6b4a2b;stroke-width:.13;stroke-linecap:round;stroke-linejoin:round}#asv .ag polygon{fill:#6b4a2b}
 #asv .ag.bump polyline{stroke:#e03131}#asv .ag.bump polygon{fill:#e03131}
 #asv .ag.hintA polyline{stroke:#f59f00;stroke-width:.2}#asv .ag.hintA polygon{fill:#f59f00}
+.cm{display:grid;gap:12px}.cmst{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;background:linear-gradient(#3b2a8f,#2a1f6b);padding:10px 6px;border-radius:18px;box-shadow:var(--sh)}
+.cmc{position:relative;height:min(300px,52svh);border:0;border-radius:12px;background:rgba(255,255,255,.1);box-shadow:inset 0 -4px 0 rgba(0,0,0,.25);display:flex;flex-direction:column-reverse;align-items:center;padding:6px 0 22px;cursor:pointer;font:inherit}
+.cmc.sel{background:rgba(255,255,255,.26);outline:3px solid #ffd43b}.cmc.full{background:rgba(255,80,80,.18)}
+.cmc em{position:absolute;bottom:3px;left:0;right:0;font-style:normal;font-size:10px;color:#d0bfff;font-weight:800}
+.cmc.lock{cursor:default;justify-content:center;align-items:center;flex-direction:column;color:#d0bfff;padding:4px}.cmc.lock span{font-size:20px}.cmc.lock small{font-size:9.5px;line-height:1.3;text-align:center}
+.cn{display:grid;place-items:center;width:88%;max-width:46px;aspect-ratio:2.1;margin-top:-5%;border-radius:50%;background:radial-gradient(ellipse at 50% 35%,color-mix(in srgb,var(--k) 55%,#fff),var(--k) 70%);box-shadow:0 3px 0 color-mix(in srgb,var(--k) 60%,#000),0 4px 4px rgba(0,0,0,.3);color:#fff;font-style:normal;font-weight:900;font-size:13px;text-shadow:0 1px 2px rgba(0,0,0,.5);transition:transform .15s}
+.cn.up{transform:translateY(-8px)}
+.cmdeal{justify-self:center;min-width:200px}.cmdeal:disabled{opacity:.45}
+.t48{display:grid;gap:12px;justify-items:center}
+.t48b{position:relative;width:min(92vw,400px);aspect-ratio:1;background:#bbada0;border-radius:14px;padding:2.5%;display:grid;grid-template-columns:repeat(4,1fr);gap:2.5%;touch-action:none;box-shadow:var(--sh)}
+.t48b>i{background:#cdc1b4;border-radius:8px}
+.t48b .tl{position:absolute;left:2.5%;top:2.5%;width:21.875%;height:21.875%;display:grid;place-items:center;border-radius:8px;font-weight:900;transform:translate(calc(var(--c)*111.43%),calc(var(--r)*111.43%));transition:transform .12s ease;box-shadow:0 2px 0 rgba(0,0,0,.12)}
+.t48b .tl.new{animation:pop .2s}.t48b .tl.pop{animation:pop .2s}.t48b.shake{animation:shake .3s}
+@media(min-width:440px){.t48b .tl{font-size:34px!important}}
+.t48k{display:grid;grid-template-columns:repeat(3,64px);grid-template-areas:". u ." "l d r";gap:6px}.t48k [data-d=u]{grid-area:u}.t48k [data-d=l]{grid-area:l}.t48k [data-d=d]{grid-area:d}.t48k [data-d=r]{grid-area:r}.t48k .btn{min-height:48px;font-size:18px}
+@keyframes shake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+@keyframes pop{0%{scale:.3}70%{scale:1.12}100%{scale:1}}
 .mlives{text-align:center;font-weight:900;font-size:17px;color:#fa5252;margin:-6px 0 8px;letter-spacing:.05em}
 .mlives.shake{animation:shake .4s}
 .ctrl.three{grid-template-columns:1fr .8fr 1fr}
@@ -811,7 +828,7 @@ function bindTop(){
 
 const GOAL=5;
 /* --- 능력치 --- */
-const REF={brick:80,arrows:60,hoop:30,catch:50,mole:45,sort:40,match:30,pairs:30,hand:35,path:80,big:35,color:30,stack:40,jump:40,miss:30,shop:25,nback:40,simon:30,rps:35,ice:30,lotto:30,frog:60,mahjong:40,type:60,potion:35,blocks:80,pixel:150,chosung:30,wordfind:40,flags:35,capitals:35,puzzle:40,hidden:40,blank:35,sumg:50,change:20,chain:20,clock:20,coins:20,balloon:30,bbq:25,lights:30,stroop:35,cipher:40,schulte:40,rhythm:60,scales:30,seq:30,maze:40,hanoi:30,rotate:30,diff:30,count:25,shadow:35,posmem:30,newitem:30,backdig:20,wordmem:30,ox:40,chainw:25,spell:25,proverb:30,antonym:25,idiom:30,scramble:40,engq:30};
+const REF={coinmerge:60,g2048:80,brick:80,arrows:60,hoop:30,catch:50,mole:45,sort:40,match:30,pairs:30,hand:35,path:80,big:35,color:30,stack:40,jump:40,miss:30,shop:25,nback:40,simon:30,rps:35,ice:30,lotto:30,frog:60,mahjong:40,type:60,potion:35,blocks:80,pixel:150,chosung:30,wordfind:40,flags:35,capitals:35,puzzle:40,hidden:40,blank:35,sumg:50,change:20,chain:20,clock:20,coins:20,balloon:30,bbq:25,lights:30,stroop:35,cipher:40,schulte:40,rhythm:60,scales:30,seq:30,maze:40,hanoi:30,rotate:30,diff:30,count:25,shadow:35,posmem:30,newitem:30,backdig:20,wordmem:30,ox:40,chainw:25,spell:25,proverb:30,antonym:25,idiom:30,scramble:40,engq:30};
 const SPDB=[1,1.1,1.2];
 const CATS=['집중력','사고력','관찰력','기억력','계산력','언어력'];
 const ability=id=>{const h=store.get('hist_'+id,[]);return h.length?Math.max(...h.slice(-5)):null};
@@ -907,7 +924,7 @@ const GAMES=[
 {id:'stack',cat:'집중력',name:'더높이',noTimer:true,how:'움직이는 블록이 아래 블록과 겹칠 때 화면을 누르세요. 딱 맞추면 2점이에요. 시간 제한은 없고, 블록을 완전히 놓치면 바로 끝나요.',art:`<svg viewBox="0 0 100 100"><rect x="26" y="20" width="52" height="26" rx="4" fill="#2fb4ff"/><rect x="20" y="50" width="56" height="26" rx="4" fill="#a0522d"/><rect x="10" y="80" width="80" height="8" rx="4" fill="#8bc56b"/></svg>`,run:c=>window.THREE?stack3D(c):stack(c)},
 {id:'jump',cat:'집중력',name:'점프점프',noTimer:true,how:'맨 아래 발판에서 출발해요. 통통 튀는 공을 왼쪽·오른쪽으로 움직여 바닥의 빈 틈으로 내려가세요. 천장 가시에 닿거나 빨간 가시를 밟으면 목숨이 하나 줄어요. 시간 제한 없이, 목숨 3개를 다 잃으면 끝나요.',art:`<svg viewBox="0 0 100 86"><path d="M0 0h100v6l-5 6-5-6-5 6-5-6-5 6-5-6-5 6-5-6-5 6-5-6-5 6-5-6-5 6-5-6-5 6-5-6-5 6-5-6-5 6-5-6-5 6-5-6z" fill="#ff5a5a"/><rect x="0" y="40" width="56" height="9" rx="3" fill="#4cd137"/><rect x="76" y="40" width="24" height="9" rx="3" fill="#4cd137"/><rect x="0" y="70" width="20" height="9" rx="3" fill="#4cd137"/><rect x="42" y="70" width="58" height="9" rx="3" fill="#4cd137"/><circle cx="66" cy="27" r="10" fill="#ffd43b"/><circle cx="63" cy="26" r="1.6" fill="#22264a"/><circle cx="69" cy="26" r="1.6" fill="#22264a"/></svg>`,time:90,run:c=>window.THREE?jump3D(c):jumpG(c)},
 {id:'miss',cat:'관찰력',name:'숫자 찾기',how:'1부터 차례로 있어야 할 숫자 중 빠진 하나를 찾으세요.',art:`<svg viewBox="0 0 100 100"><g ${FONT} font-size="20" text-anchor="middle" fill="#1b2240">${tile(10,10,38,38)}<text x="29" y="36">1</text>${tile(52,10,38,38)}<text x="71" y="36">2</text>${tile(10,52,38,38)}<text x="29" y="78">3</text>${tile(52,52,38,38)}<text x="71" y="78">5</text></g></svg>`,run:missing},
-{id:'shop',cat:'계산력',name:'장보기',how:'물건 값에 개수를 곱해서 모두 더한 금액을 계산기에 입력하세요. 예) 사과 1,000원 × 2개 = 2,000원. 두 번 틀리면 정답을 알려주고 다음 문제로 넘어가요.',art:`<svg viewBox="0 0 100 100"><rect x="18" y="6" width="64" height="88" rx="10" fill="#2b3350"/><rect x="24" y="12" width="52" height="18" rx="4" fill="#eef2ff"/><text x="72" y="26" ${FONT} font-size="11" text-anchor="end" fill="#1b2240">1,900</text>${[0,1,2].map(r=>[0,1,2].map(k=>`<rect x="${25+k*17}" y="${36+r*18}" width="14" height="14" rx="3" fill="${r==2&&k==2?'#228be6':'#414b6e'}"/>`).join('')).join('')}</svg>`,time:120,run:shop},
+{id:'g2048',cat:'계산력',name:'2048 블록 합치기',noTimer:true,how:'화면을 위·아래·왼쪽·오른쪽으로 밀면(또는 버튼을 누르면) 모든 블록이 그쪽으로 움직여요. 같은 숫자끼리 부딪히면 더해져서 하나가 돼요(2+2=4, 4+4=8…). 한 번 밀 때마다 새 블록이 생겨요. 2048을 만들어 보세요! 더 움직일 수 없으면 끝나요. 💡힌트를 쓰면 가장 많이 합쳐지는 방향을 알려줘요.',art:'<svg viewBox="0 0 100 100"><rect x="8" y="8" width="84" height="84" rx="10" fill="#bbada0"/><rect x="14" y="14" width="16" height="16" rx="3" fill="#cdc1b4"/><rect x="34" y="14" width="16" height="16" rx="3" fill="#eee4da"/><rect x="54" y="14" width="16" height="16" rx="3" fill="#cdc1b4"/><rect x="74" y="14" width="16" height="16" rx="3" fill="#cdc1b4"/><rect x="14" y="34" width="16" height="16" rx="3" fill="#ede0c8"/><rect x="34" y="34" width="16" height="16" rx="3" fill="#f2b179"/><rect x="54" y="34" width="16" height="16" rx="3" fill="#cdc1b4"/><rect x="74" y="34" width="16" height="16" rx="3" fill="#eee4da"/><rect x="14" y="54" width="16" height="16" rx="3" fill="#f59563"/><rect x="34" y="54" width="16" height="16" rx="3" fill="#cdc1b4"/><rect x="54" y="54" width="16" height="16" rx="3" fill="#edcf72"/><rect x="74" y="54" width="16" height="16" rx="3" fill="#cdc1b4"/><rect x="14" y="74" width="16" height="16" rx="3" fill="#cdc1b4"/><rect x="34" y="74" width="16" height="16" rx="3" fill="#eee4da"/><rect x="54" y="74" width="16" height="16" rx="3" fill="#cdc1b4"/><rect x="74" y="74" width="16" height="16" rx="3" fill="#edc22e"/><text x="82" y="78" font-size="6" font-weight="900" text-anchor="middle" fill="#fff">2048</text><text x="42" y="47" font-size="8" font-weight="900" text-anchor="middle" fill="#fff">8</text></svg>',run:g2048},{id:'shop',cat:'계산력',name:'장보기',how:'물건 값에 개수를 곱해서 모두 더한 금액을 계산기에 입력하세요. 예) 사과 1,000원 × 2개 = 2,000원. 두 번 틀리면 정답을 알려주고 다음 문제로 넘어가요.',art:`<svg viewBox="0 0 100 100"><rect x="18" y="6" width="64" height="88" rx="10" fill="#2b3350"/><rect x="24" y="12" width="52" height="18" rx="4" fill="#eef2ff"/><text x="72" y="26" ${FONT} font-size="11" text-anchor="end" fill="#1b2240">1,900</text>${[0,1,2].map(r=>[0,1,2].map(k=>`<rect x="${25+k*17}" y="${36+r*18}" width="14" height="14" rx="3" fill="${r==2&&k==2?'#228be6':'#414b6e'}"/>`).join('')).join('')}</svg>`,time:120,run:shop},
 {id:'nback',cat:'기억력',name:'도형 기억하기',how:'도형이 하나씩 나와요. 바로 앞에 나온 도형과 같은지 다른지 고르세요.',art:`<svg viewBox="0 0 100 100"><g transform="translate(4 4) scale(.42)">${SH.circle('#22b83a')}</g><g transform="translate(54 4) scale(.42)">${SH.heart('#ef1c25')}</g><g transform="translate(4 54) scale(.42)">${SH.tri('#3d63f2')}</g><g transform="translate(54 54) scale(.42)">${SH.penta('#f56a00')}</g></svg>`,run:nback},
 {id:'simon',cat:'기억력',name:'순서기억하기',how:'육각형에 불이 들어온 순서를 기억했다가 똑같이 누르세요.',art:`<svg viewBox="0 0 100 100"><g ${FONT} font-size="12" text-anchor="middle" fill="#fff">${[[30,22,0],[60,22,1],[15,48,2],[45,48,3],[75,48,4],[30,74,5],[60,74,6]].map(([x,y,k])=>`<path transform="translate(${x} ${y})" d="M-7.5 -13h15l7.5 13-7.5 13h-15l-7.5-13z" fill="${[1,2,3,5].includes(k)?'#7950f2':'#fff'}"/>`).join('')}<text x="60" y="26">1</text><text x="15" y="52">2</text><text x="30" y="78">3</text><text x="45" y="52">4</text></g></svg>`,time:90,run:simon},
 {id:'rps',cat:'사고력',name:'가위바위보',how:'지시문을 잘 읽고 알맞은 손을 내세요. "이기지 말고 비기지 마세요"는 져야 해요.',art:'<span style="font-size:52px">✌️</span>',run:rps},
@@ -938,7 +955,7 @@ const GAMES=[
 {id:'scales',cat:'사고력',name:'무게 비교',how:'저울을 보고 어느 쪽이 더 무거운지 따져서, 가장 무거운(또는 가벼운) 것을 고르세요. 아래로 기운 쪽이 더 무거워요.',art:'<span class="emo" style="font-size:50px">⚖️</span>',run:scales},
 {id:'seq',cat:'사고력',name:'규칙 찾기',how:'2, 4, 6, 8, ? 처럼 숫자가 늘어서는 규칙을 찾아 ?에 들어갈 수를 고르세요.',art:'<span style="font-size:28px;font-weight:900;color:#1b2240;line-height:1.15">2 4 6 <span style="color:#f03e3e">?</span></span>',run:seqG},
 {id:'maze',cat:'사고력',name:'미로 탈출',time:90,how:'화살표 버튼을 누르거나 미로 위를 손가락으로 밀어서 깃발까지 가세요. 탈출할 때마다 미로가 커져요.',art:'<span class="emo" style="font-size:46px">🏁</span>',run:maze},
-{id:'arrows',cat:'사고력',name:'화살표 퍼즐',noTimer:true,how:'화살표를 누르면 머리가 가리키는 방향으로 쭉 빠져나가요. 앞에 다른 화살표가 있으면 부딪혀서 💧물방울이 하나 줄어요(3개). 빠져나갈 수 있는 순서를 잘 생각해서 화살표를 모두 없애면 다음 레벨! 화살표 1개당 1점, 레벨 통과 5점. 💡힌트를 쓰면 지금 뺄 수 있는 화살표를 알려줘요.',art:`<svg viewBox="0 0 100 100"><rect x="8" y="8" width="84" height="84" rx="10" fill="#f6ecdc"/><g fill="none" stroke="#6b4a2b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 30h26v-12"/><path d="M80 22v30H58"/><path d="M22 78V48h22v18h12"/><path d="M66 80h14V66"/></g><g fill="#6b4a2b"><path d="M46 10l-6 9h12z"/><path d="M50 52l9-6v12z"/><path d="M64 66l-9-6v12z"/><path d="M80 58l-6 9h12z"/></g></svg>`,run:arrowOut},{id:'hanoi',cat:'사고력',name:'하노이탑',time:120,how:'왼쪽 기둥의 원판을 모두 오른쪽 기둥으로 옮기세요. 기둥을 눌러 맨 위 원판을 고르고, 옮길 기둥을 누르면 돼요. 큰 원판은 작은 원판 위에 올릴 수 없어요. 최소 횟수로 끝내면 보너스! 막히면 💡힌트로 다음 수를 알려줘요.',art:'<span style="font-size:34px;font-weight:900;color:#1b2240;line-height:1.15"><svg viewBox="0 0 100 70" width="90"><rect x="18" y="10" width="4" height="50" fill="#868e96"/><rect x="48" y="10" width="4" height="50" fill="#868e96"/><rect x="78" y="10" width="4" height="50" fill="#868e96"/><rect x="4" y="50" width="32" height="10" rx="4" fill="#ff6b6b"/><rect x="9" y="40" width="22" height="10" rx="4" fill="#4dabf7"/><rect x="14" y="30" width="12" height="10" rx="4" fill="#ffd43b"/></svg></span>',run:hanoi},
+{id:'arrows',cat:'사고력',name:'화살표 퍼즐',noTimer:true,how:'화살표를 누르면 머리가 가리키는 방향으로 쭉 빠져나가요. 앞에 다른 화살표가 있으면 부딪혀서 💧물방울이 하나 줄어요(3개). 빠져나갈 수 있는 순서를 잘 생각해서 화살표를 모두 없애면 다음 레벨! 화살표 1개당 1점, 레벨 통과 5점. 💡힌트를 쓰면 지금 뺄 수 있는 화살표를 알려줘요.',art:`<svg viewBox="0 0 100 100"><rect x="8" y="8" width="84" height="84" rx="10" fill="#f6ecdc"/><g fill="none" stroke="#6b4a2b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 30h26v-12"/><path d="M80 22v30H58"/><path d="M22 78V48h22v18h12"/><path d="M66 80h14V66"/></g><g fill="#6b4a2b"><path d="M46 10l-6 9h12z"/><path d="M50 52l9-6v12z"/><path d="M64 66l-9-6v12z"/><path d="M80 58l-6 9h12z"/></g></svg>`,run:arrowOut},{id:'coinmerge',cat:'사고력',name:'동전 합치기',noTimer:true,how:'기둥을 누르면 맨 위의 같은 숫자 동전들을 집어요. 다른 기둥을 누르면 그 위로 옮겨요(빈 기둥이나 같은 숫자 위에만 놓을 수 있어요). 같은 숫자 동전이 한 기둥에 5개 모이면 다음 숫자 동전으로 합쳐져요! 🪙동전 받기를 누르면 새 동전이 들어오고, 모든 기둥이 꽉 차서 더 옮길 수 없으면 끝나요. 큰 숫자를 만들수록 점수가 커져요.',art:'<svg viewBox="0 0 100 100"><rect x="6" y="6" width="88" height="88" rx="12" fill="#3b2a8f"/><ellipse cx="28" cy="78" rx="13" ry="6" fill="#f2b632" stroke="rgba(0,0,0,.25)"/><ellipse cx="28" cy="70" rx="13" ry="6" fill="#f2b632" stroke="rgba(0,0,0,.25)"/><ellipse cx="28" cy="62" rx="13" ry="6" fill="#f2b632" stroke="rgba(0,0,0,.25)"/><ellipse cx="28" cy="54" rx="13" ry="6" fill="#f2b632" stroke="rgba(0,0,0,.25)"/><ellipse cx="50" cy="78" rx="13" ry="6" fill="#adb5bd" stroke="rgba(0,0,0,.25)"/><ellipse cx="50" cy="70" rx="13" ry="6" fill="#adb5bd" stroke="rgba(0,0,0,.25)"/><ellipse cx="72" cy="78" rx="13" ry="6" fill="#c8794a" stroke="rgba(0,0,0,.25)"/><ellipse cx="72" cy="70" rx="13" ry="6" fill="#c8794a" stroke="rgba(0,0,0,.25)"/><ellipse cx="72" cy="62" rx="13" ry="6" fill="#c8794a" stroke="rgba(0,0,0,.25)"/><text x="28" y="57" font-size="8" font-weight="900" text-anchor="middle" fill="#fff">3</text><text x="50" y="73" font-size="8" font-weight="900" text-anchor="middle" fill="#fff">2</text><text x="72" y="65" font-size="8" font-weight="900" text-anchor="middle" fill="#fff">1</text></svg>',run:coinMerge},{id:'hanoi',cat:'사고력',name:'하노이탑',time:120,how:'왼쪽 기둥의 원판을 모두 오른쪽 기둥으로 옮기세요. 기둥을 눌러 맨 위 원판을 고르고, 옮길 기둥을 누르면 돼요. 큰 원판은 작은 원판 위에 올릴 수 없어요. 최소 횟수로 끝내면 보너스! 막히면 💡힌트로 다음 수를 알려줘요.',art:'<span style="font-size:34px;font-weight:900;color:#1b2240;line-height:1.15"><svg viewBox="0 0 100 70" width="90"><rect x="18" y="10" width="4" height="50" fill="#868e96"/><rect x="48" y="10" width="4" height="50" fill="#868e96"/><rect x="78" y="10" width="4" height="50" fill="#868e96"/><rect x="4" y="50" width="32" height="10" rx="4" fill="#ff6b6b"/><rect x="9" y="40" width="22" height="10" rx="4" fill="#4dabf7"/><rect x="14" y="30" width="12" height="10" rx="4" fill="#ffd43b"/></svg></span>',run:hanoi},
 {id:'rotate',cat:'사고력',name:'도형 회전',how:'빨간 도형을 <b>돌리기만</b> 해서 만들 수 있는 모양을 고르세요. 뒤집은 모양은 정답이 아니에요.',art:'<span style="font-size:34px;font-weight:900;color:#1b2240;line-height:1.15"><svg viewBox="0 0 70 70" width="70"><g fill="#f03e3e"><rect x="22" y="2" width="20" height="20" rx="3"/><rect x="44" y="2" width="20" height="20" rx="3"/><rect x="0" y="24" width="20" height="20" rx="3"/><rect x="22" y="24" width="20" height="20" rx="3"/><rect x="22" y="46" width="20" height="20" rx="3"/></g></svg></span>',run:rotateG},
 {id:'diff',cat:'관찰력',name:'다른 그림 찾기',how:'위아래 두 판에서 그림이 다른 칸 하나를 찾아 누르세요.',art:'<span class="emo" style="font-size:30px">🍎🍊<br>🍎<span style="opacity:.5">🍋</span></span>',run:diffG},
 {id:'count',cat:'관찰력',name:'개수 세기',how:'여러 그림이 섞여 있어요. 물어보는 그림이 모두 몇 개인지 세어서 고르세요.',art:'<span class="emo" style="font-size:30px">🍎🍌<br>🍎🍇</span>',run:countG},
@@ -971,7 +988,7 @@ const NEWS={
  scales:{added:'2026-11-21'},seq:{added:'2026-11-21'},maze:{added:'2026-11-21',updated:'2026-11-23',note:'깃발 칸 크기가 다른 칸과 같아졌어요'},hanoi:{added:'2026-11-21',updated:'2026-11-23',note:'원판 수를 줄이고 힌트와 놓을 수 있는 기둥 표시가 생겼어요'},rotate:{added:'2026-11-21'},
  diff:{added:'2026-11-21'},count:{added:'2026-11-21'},shadow:{added:'2026-11-21'},posmem:{added:'2026-11-21',updated:'2026-11-23',note:'시간 대신 목숨 3개로 바뀌었어요'},newitem:{added:'2026-11-21',updated:'2026-11-23',note:'시간 대신 목숨 3개로 바뀌었어요'},backdig:{added:'2026-11-21',updated:'2026-11-23',note:'시간 대신 목숨 3개로 바뀌었어요'},wordmem:{added:'2026-11-21',updated:'2026-11-23',note:'시간 대신 목숨 3개로 바뀌었어요'},ox:{added:'2026-11-21'},
  chainw:{added:'2026-11-21'},spell:{added:'2026-11-21'},proverb:{added:'2026-11-21'},antonym:{added:'2026-11-21'},idiom:{added:'2026-11-21'},scramble:{added:'2026-11-21'},engq:{added:'2026-11-21'},
- frog:{added:'2026-11-22'},mahjong:{added:'2026-11-22'},catch:{added:'2026-11-23'},hoop:{added:'2026-11-23'},arrows:{added:'2026-11-23'},brick:{added:'2026-11-23'},
+ frog:{added:'2026-11-22'},mahjong:{added:'2026-11-22'},catch:{added:'2026-11-23'},hoop:{added:'2026-11-23'},arrows:{added:'2026-11-23'},brick:{added:'2026-11-23'},coinmerge:{added:'2026-11-23'},g2048:{added:'2026-11-23'},
  path:{updated:'2026-11-23',note:'돌멩이 블록이 생겼어요. 가운데 점프 버튼으로 한 칸 뛰어넘으세요'},
  jump:{updated:'2026-11-21',note:'맨 아래 발판에서 출발하고, 시간 제한 없이 목숨 3개로 바뀌었어요'},
  stack:{updated:'2026-11-21',note:'시간 제한 없이, 블록을 놓치면 바로 끝나요'},
@@ -1875,6 +1892,65 @@ function arrowOut(c){
    setShape(m.a,sub(m.ext,m.t,m.t+m.L))}});
  c.setHint(()=>{const f=AR.find(a=>!a.gone&&!a.moving&&!rayFree(a));if(!f)return false;hintId=f.id;f.g.classList.add('hintA')});
  gen();
+}
+function coinMerge(c){
+ const CAP=8,MERGE=5,COLS=7;
+ const CC=['','#c8794a','#adb5bd','#f2b632','#4dabf7','#f03e3e','#9775fa','#51cf66','#f783ac','#495057','#22b8cf','#e8590c','#7950f2'];
+ let st=Array.from({length:COLS},()=>[]),open=5,sel=-1,maxV=2,dead=false,busy=false;
+ c.prompt('같은 숫자 동전끼리 모아 5개를 쌓으면 합쳐져요');
+ c.el.innerHTML='<div class="cm"><div class="cmst" id="cs"></div><button class="cta cmdeal" id="dl">🪙 동전 받기</button><p class="bhint">기둥을 눌러 위쪽 같은 동전을 집고, 다른 기둥을 눌러 옮겨요</p></div>';
+ const cs=c.el.querySelector('#cs'),dl=c.el.querySelector('#dl');
+ const run=s=>{if(!s.length)return 0;const v=s[s.length-1];let k=0;for(let i=s.length-1;i>=0&&s[i]===v;i--)k++;return k};
+ const top=s=>s[s.length-1];
+ const draw=()=>{cs.innerHTML=st.map((s,i)=>{if(i>=open)return `<div class="cmc lock"><span>🔒</span><small>${i===5?'4':'6'}번 동전<br>만들면 열림</small></div>`;
+   const r=i===sel?run(s):0;return `<button class="cmc${i===sel?' sel':''}${s.length>=CAP?' full':''}" data-i="${i}">${s.map((v,j)=>`<i class="cn${j>=s.length-r?' up':''}" style="--k:${CC[Math.min(v,12)]};--j:${j}">${v}</i>`).join('')}<em>${s.length}/${CAP}</em></button>`}).join('');
+  cs.querySelectorAll('.cmc[data-i]').forEach(b=>b.onclick=()=>tap(+b.dataset.i))};
+ const canGo=(a,b)=>{const A=st[a],B=st[b];return a!==b&&A.length&&B.length<CAP&&(!B.length||top(B)===top(A))};
+ const tap=i=>{if(dead||busy)return;if(sel<0){if(!st[i].length)return;sel=i;draw();return}
+  if(sel===i){sel=-1;draw();return}
+  if(!canGo(sel,i)){if(st[i].length){sel=i;draw()}else{sel=-1;draw()}return}
+  const A=st[sel],B=st[i],n=Math.min(run(A),CAP-B.length);for(let k=0;k<n;k++)B.push(A.pop());sel=-1;Snd.fx('tap');draw();check()};
+ const check=()=>{let did=false;st.forEach((s,i)=>{if(i>=open)return;const r=run(s);if(r>=MERGE){const v=top(s);s.splice(s.length-r,r);const nv=v+1,cnt=Math.max(1,r-MERGE+1);for(let k=0;k<cnt;k++)s.push(nv);did=true;c.ok(nv);
+    if(nv>maxV){maxV=nv;c.prompt(`🎉 ${nv}번 동전을 처음 만들었어요!`)}else c.prompt(`${v}번 ${r}개 → ${nv}번 동전!`)}});
+  if(maxV>=4&&open<6){open=6;c.prompt('새 기둥이 열렸어요!')}if(maxV>=6&&open<7){open=7;c.prompt('새 기둥이 열렸어요!')}
+  if(did){draw();c.later(check,350)}else over()};
+ const over=()=>{const free=st.slice(0,open).reduce((a,s)=>a+CAP-s.length,0);let mv=false;for(let a=0;a<open;a++)for(let b=0;b<open;b++)if(canGo(a,b))mv=true;
+  dl.disabled=free===0;if(free===0&&!mv&&!dead){dead=true;c.prompt('더 이상 놓을 곳이 없어요');c.later(c.end,1600)}};
+ const deal=()=>{if(dead||busy)return;sel=-1;const hi=Math.max(2,maxV-1),lo=Math.max(1,hi-2);let n=4+rnd(2),placed=0;
+  for(let t=0;t<40&&n>0;t++){const cand=[];for(let i=0;i<open;i++)if(st[i].length<CAP)cand.push(i);if(!cand.length)break;const i=pick(cand),v=lo+rnd(hi-lo+1),len=Math.min(n,1+rnd(3),CAP-st[i].length);for(let k=0;k<len;k++)st[i].push(v);n-=len;placed+=len}
+  Snd.fx('help');draw();check()};
+ dl.onclick=deal;
+ c.setHint(()=>{let best=null,bs=-1;for(let a=0;a<open;a++)for(let b=0;b<open;b++)if(canGo(a,b)){const s=run(st[a])+run(st[b])+(st[b].length?3:0);if(s>bs){bs=s;best=[a,b]}}
+  if(!best)return false;sel=-1;draw();const bt=cs.querySelectorAll('.cmc');bt[best[0]].classList.add('hintg');setTimeout(()=>bt[best[1]]&&bt[best[1]].classList.add('hintg'),500);c.prompt('💡 반짝이는 기둥에서 옆 기둥으로 옮겨 보세요')});
+ for(let k=0;k<2;k++)deal();
+}
+function g2048(c){
+ const N=4;let G,tiles=[],uid=0,dead=false,best=2,moving=false;
+ c.el.innerHTML='<div class="t48"><div class="t48b" id="t4b"></div><div class="t48k"><button class="btn" data-d="u">▲</button><button class="btn" data-d="l">◀</button><button class="btn" data-d="d">▼</button><button class="btn" data-d="r">▶</button></div><p class="bhint">화면을 위아래·좌우로 밀거나 버튼을 누르세요</p></div>';
+ const tb=c.el.querySelector('#t4b');tb.innerHTML=Array(16).fill('<i></i>').join('');
+ const TC={2:['#eee4da','#776e65'],4:['#ede0c8','#776e65'],8:['#f2b179','#fff'],16:['#f59563','#fff'],32:['#f67c5f','#fff'],64:['#f65e3b','#fff'],128:['#edcf72','#fff'],256:['#edcc61','#fff'],512:['#edc850','#fff'],1024:['#edc53f','#fff'],2048:['#edc22e','#fff']};
+ const el=t=>{const d=document.createElement('b');d.className='tl new';tb.append(d);t.d=d;put(t);return t};
+ const put=t=>{const [b,f]=TC[t.v]||['#3c3a32','#fff'];t.d.style.cssText=`--r:${t.r};--c:${t.c};background:${b};color:${f};font-size:${t.v>=1024?'5.5vw':t.v>=128?'7vw':'8.5vw'}`;t.d.textContent=t.v};
+ const empty=()=>{const e=[];for(let r=0;r<N;r++)for(let k=0;k<N;k++)if(!G[r][k])e.push([r,k]);return e};
+ const add=()=>{const e=empty();if(!e.length)return;const [r,k]=pick(e),t=el({id:uid++,v:Math.random()<.9?2:4,r,c:k});G[r][k]=t};
+ const lines=d=>{const L=[];for(let i=0;i<N;i++){const l=[];for(let j=0;j<N;j++){const [r,k]=d==='l'?[i,j]:d==='r'?[i,N-1-j]:d==='u'?[j,i]:[N-1-j,i];l.push([r,k])}L.push(l)}return L};
+ const sim=d=>{let moved=false,gain=0;for(const l of lines(d)){let w=0,lastV=0;const vals=l.map(([r,k])=>G[r][k]?G[r][k].v:0).filter(v=>v);const out=[];for(let i=0;i<vals.length;i++){if(vals[i]===vals[i+1]){out.push(vals[i]*2);gain+=vals[i]*2;i++}else out.push(vals[i])}
+   l.forEach(([r,k],j)=>{if((G[r][k]?G[r][k].v:0)!==(out[j]||0))moved=true})}return{moved,gain}};
+ const move=d=>{if(dead||moving)return;if(!sim(d).moved){tb.classList.remove('shake');void tb.offsetWidth;tb.classList.add('shake');return}
+  const NG=Array.from({length:N},()=>Array(N).fill(null)),rm=[];let pts=0;
+  for(const l of lines(d)){const ts=l.map(([r,k])=>G[r][k]).filter(Boolean);let j=0;
+   for(let i=0;i<ts.length;i++){const [r,k]=l[j];if(ts[i+1]&&ts[i].v===ts[i+1].v){const a=ts[i],b=ts[i+1];a.r=b.r=r;a.c=b.c=k;put(a);put(b);rm.push(a,b);const m={id:uid++,v:a.v*2,r,c:k};NG[r][k]=m;m.pend=true;i++;
+     pts+=Math.max(1,Math.log2(m.v)-2);if(m.v>best)best=m.v}else{ts[i].r=r;ts[i].c=k;put(ts[i]);NG[r][k]=ts[i]}j++}}
+  G=NG;moving=true;Snd.fx('tap');
+  setTimeout(()=>{rm.forEach(t=>t.d.remove());G.flat().forEach(t=>{if(t&&t.pend){t.pend=false;el(t);t.d.classList.replace('new','pop')}});add();moving=false;
+   if(pts)c.ok(pts);c.prompt(`가장 큰 수: ${best}`);if(best>=2048&&!c.won){c.won=1;c.ok(50);c.prompt('🎉 2048 달성! 계속 해 보세요')}
+   if(!['l','r','u','d'].some(x=>sim(x).moved)){dead=true;c.prompt('더 이상 움직일 수 없어요');c.later(c.end,1600)}},140)};
+ G=Array.from({length:N},()=>Array(N).fill(null));add();add();c.prompt('같은 숫자를 밀어서 합쳐 2048을 만드세요');
+ c.el.querySelectorAll('.t48k .btn').forEach(b=>b.onclick=()=>move(b.dataset.d));
+ let sx=null,sy=null;tb.onpointerdown=e=>{e.preventDefault();sx=e.clientX;sy=e.clientY;tb.setPointerCapture&&tb.setPointerCapture(e.pointerId)};
+ tb.onpointerup=e=>{if(sx==null)return;const dx=e.clientX-sx,dy=e.clientY-sy;sx=null;if(Math.max(Math.abs(dx),Math.abs(dy))<25)return;move(Math.abs(dx)>Math.abs(dy)?(dx>0?'r':'l'):(dy>0?'d':'u'))};
+ document.onkeydown=e=>{const m={ArrowLeft:'l',ArrowRight:'r',ArrowUp:'u',ArrowDown:'d'}[e.key];if(m){e.preventDefault();move(m)}};
+ c.setHint(()=>{let bd=null,bg=-1;for(const d of ['d','l','r','u']){const s=sim(d);if(s.moved&&s.gain>bg){bg=s.gain;bd=d}}if(!bd)return false;const b=c.el.querySelector(`.t48k .btn[data-d="${bd}"]`);b.classList.add('hintg');c.prompt(`💡 ${{u:'위',d:'아래',l:'왼쪽',r:'오른쪽'}[bd]}으로 밀어 보세요`);setTimeout(()=>b.classList.remove('hintg'),2500)});
 }
 function breakout(c){
  c.prompt('화면을 누르면 공이 출발해요');
