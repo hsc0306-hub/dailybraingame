@@ -802,7 +802,7 @@ function bindTop(){
 
 const GOAL=5;
 /* --- 능력치 --- */
-const REF={catch:50,mole:45,sort:40,match:30,pairs:30,hand:35,path:80,big:35,color:30,stack:40,jump:40,miss:30,shop:25,nback:40,simon:30,rps:35,ice:30,lotto:30,frog:60,mahjong:40,type:60,potion:35,blocks:80,pixel:150,chosung:30,wordfind:40,flags:35,capitals:35,puzzle:40,hidden:40,blank:35,sumg:50,change:20,chain:20,clock:20,coins:20,balloon:30,bbq:25,lights:30,stroop:35,cipher:40,schulte:40,rhythm:60,scales:30,seq:30,maze:40,hanoi:30,rotate:30,diff:30,count:25,shadow:35,posmem:30,newitem:30,backdig:20,wordmem:30,ox:40,chainw:25,spell:25,proverb:30,antonym:25,idiom:30,scramble:40,engq:30};
+const REF={hoop:30,catch:50,mole:45,sort:40,match:30,pairs:30,hand:35,path:80,big:35,color:30,stack:40,jump:40,miss:30,shop:25,nback:40,simon:30,rps:35,ice:30,lotto:30,frog:60,mahjong:40,type:60,potion:35,blocks:80,pixel:150,chosung:30,wordfind:40,flags:35,capitals:35,puzzle:40,hidden:40,blank:35,sumg:50,change:20,chain:20,clock:20,coins:20,balloon:30,bbq:25,lights:30,stroop:35,cipher:40,schulte:40,rhythm:60,scales:30,seq:30,maze:40,hanoi:30,rotate:30,diff:30,count:25,shadow:35,posmem:30,newitem:30,backdig:20,wordmem:30,ox:40,chainw:25,spell:25,proverb:30,antonym:25,idiom:30,scramble:40,engq:30};
 const SPDB=[1,1.1,1.2];
 const CATS=['집중력','사고력','관찰력','기억력','계산력','언어력'];
 const ability=id=>{const h=store.get('hist_'+id,[]);return h.length?Math.max(...h.slice(-5)):null};
@@ -906,7 +906,7 @@ const GAMES=[
 {id:'type',cat:'언어력',name:'한글타자',noTimer:true,how:'하늘에서 낱말이 떨어져요. 땅에 닿기 전에 똑같이 입력하면 사라져요. 글자 수만큼 점수를 받고, 낱말을 놓칠 때마다 목숨이 하나 줄어요. 목숨 3개를 다 잃으면 끝나요.',art:`<svg viewBox="0 0 100 100"><g ${FONT} font-size="13" text-anchor="middle" fill="#1b2240"><rect x="8" y="12" width="40" height="22" rx="11" fill="#fff"/><text x="28" y="27">바다</text><rect x="44" y="40" width="48" height="22" rx="11" fill="#fff"/><text x="68" y="55">고양이</text></g><rect x="8" y="74" width="84" height="18" rx="6" fill="#fff" stroke="#e64980" stroke-width="2.5"/><rect x="16" y="78" width="2.5" height="10" fill="#e64980"/></svg>`,run:typing},
 {id:'potion',cat:'사고력',name:'물약옮기기',time:90,how:'병을 눌러 고른 뒤 다른 병을 누르면 맨 위 물약이 옮겨져요. 빈 병이나 위 색이 같은 병에만 부을 수 있어요. 모든 병을 한 가지 색으로 채우면 다음 단계예요.',art:`<svg viewBox="0 0 100 100">${[['#ff4d6d','#4dabf7','#ff4d6d'],['#4dabf7','#ff4d6d','#4dabf7'],[]].map((t,k)=>`<g transform="translate(${14+k*28} 14)"><rect x="0" y="0" width="18" height="70" rx="9" fill="#ffffffaa" stroke="#fff" stroke-width="2.5"/>${t.map((col,j)=>`<rect x="2.5" y="${46-j*18}" width="13" height="18" rx="${j?2:6}" fill="${col}"/>`).join('')}<rect x="3" y="-5" width="12" height="7" rx="2" fill="#c98d55"/></g>`).join('')}</svg>`,run:potion},
 {id:'blocks',cat:'관찰력',name:'블록 채우기',noTimer:true,how:'아래 블록을 끌어다 네모난 판에 놓으세요. 가로줄이나 세로줄을 꽉 채우면 그 줄이 사라지며 점수를 얻어요. 놓을 곳이 없어지면 끝나요.',art:`<svg viewBox="0 0 100 100"><rect x="8" y="8" width="84" height="84" rx="10" fill="#fff"/>${[[0,0,'#ff6b6b'],[0,1,'#ff6b6b'],[1,0,'#ff6b6b'],[3,0,'#4dabf7'],[3,1,'#4dabf7'],[3,2,'#4dabf7'],[3,3,'#4dabf7'],[1,2,'#fcc419'],[1,3,'#fcc419'],[2,3,'#fcc419'],[0,3,'#51cf66']].map(([r,q,col])=>`<rect x="${13+q*19}" y="${13+r*19}" width="17" height="17" rx="3" fill="${col}"/>`).join('')}</svg>`,run:blocks},
-{id:'catch',cat:'집중력',name:'과일 받기',noTimer:true,how:'떨어지는 과일을 바구니로 받으세요. ◀ ▶ 버튼을 누르고 있거나 화면을 손가락으로 끌면 바구니가 움직여요. 과일 1점, ⭐ 별 3점! 💣 폭탄을 받거나 과일을 놓치면 목숨이 줄어요(목숨 3개).',art:`<svg viewBox="0 0 100 100"><text x="30" y="30" font-size="22">🍎</text><text x="62" y="46" font-size="20">🍌</text><text x="22" y="58" font-size="18">💣</text><path d="M20 66h60l-7 26H27z" fill="#c98a4b"/><rect x="16" y="62" width="68" height="8" rx="3" fill="#a8692f"/><path d="M36 70l-2 22M50 70v22M64 70l2 22" stroke="#9c6230" stroke-width="2"/></svg>`,run:fruitCatch},
+{id:'hoop',cat:'집중력',name:'농구 슛',time:60,how:'아래 농구공을 손가락으로 잡고 골대 쪽으로 위로 쭉 밀었다 떼세요. 세게 밀수록 멀리 날아가요. 골인 2점, 림에 안 닿는 깔끔한 슛은 +1점, 3번 연속이면 +1점! 3골마다 골대 위치가 바뀌고, 나중엔 골대가 움직여요. 💡힌트를 쓰면 던질 길을 점선으로 보여줘요.',art:`<svg viewBox="0 0 100 100"><rect x="22" y="8" width="56" height="38" rx="4" fill="#fff" stroke="#495057" stroke-width="3"/><rect x="38" y="20" width="24" height="16" fill="none" stroke="#f03e3e" stroke-width="2.5"/><ellipse cx="50" cy="44" rx="17" ry="5" fill="none" stroke="#f03e3e" stroke-width="3.5"/><path d="M34 45l5 16h22l5-16M42 46l2 15M50 47v14M58 46l-2 15" stroke="#fff" stroke-width="1.6" fill="none"/><circle cx="66" cy="78" r="15" fill="#f76707"/><path d="M51 78h30M66 63v30M56 66c5 7 5 17 0 24M76 66c-5 7-5 17 0 24" stroke="#5c1a00" stroke-width="1.6" fill="none"/></svg>`,run:hoop},{id:'catch',cat:'집중력',name:'과일 받기',noTimer:true,how:'떨어지는 과일을 바구니로 받으세요. ◀ ▶ 버튼을 누르고 있거나 화면을 손가락으로 끌면 바구니가 움직여요. 과일 1점, ⭐ 별 3점! 💣 폭탄을 받거나 과일을 놓치면 목숨이 줄어요(목숨 3개).',art:`<svg viewBox="0 0 100 100"><text x="30" y="30" font-size="22">🍎</text><text x="62" y="46" font-size="20">🍌</text><text x="22" y="58" font-size="18">💣</text><path d="M20 66h60l-7 26H27z" fill="#c98a4b"/><rect x="16" y="62" width="68" height="8" rx="3" fill="#a8692f"/><path d="M36 70l-2 22M50 70v22M64 70l2 22" stroke="#9c6230" stroke-width="2"/></svg>`,run:fruitCatch},
 {id:'chosung',cat:'언어력',name:'초성게임',how:'ㅅㄱ 처럼 낱말의 첫소리(초성)만 보여줘요. 힌트를 보고 초성이 맞는 낱말을 4개 중에서 고르세요. 처음엔 두 글자, 점점 긴 낱말이 나와요.',art:`<svg viewBox="0 0 100 100"><g ${FONT} font-size="30" text-anchor="middle" fill="#fff"><rect x="10" y="22" width="38" height="44" rx="10" fill="#e64980"/><text x="29" y="56">ㅅ</text><rect x="52" y="22" width="38" height="44" rx="10" fill="#e64980"/><text x="71" y="56">ㄱ</text></g><text x="50" y="88" ${FONT} font-size="14" text-anchor="middle" fill="#1b2240">사과?</text></svg>`,run:chosung},
 {id:'wordfind',cat:'언어력',name:'영어낱말찾기',time:90,how:'글자판 속에 영어 낱말이 숨어 있어요. 위 목록의 뜻을 보고, 낱말의 첫 글자부터 마지막 글자까지 손가락으로 쓸어서 찾으세요. 첫 글자와 마지막 글자를 차례로 눌러도 돼요.',art:`<svg viewBox="0 0 100 100"><rect x="8" y="8" width="84" height="84" rx="10" fill="#fff"/><rect x="28" y="13" width="44" height="18" rx="9" fill="#ffd43b"/><g ${FONT} font-size="13" text-anchor="middle" fill="#1b2240">${['KCATB','OSUNR','DOGAE','MLEPN'].map((row,y)=>[...row].map((ch,x)=>`<text x="${22+x*14}" y="${26+y*19}">${ch}</text>`).join('')).join('')}</g></svg>`,run:wordfind},
 {id:'flags',cat:'관찰력',name:'나라국기 맞추기',how:'국기를 보고 어느 나라인지 고르세요. 가끔은 나라 이름을 보고 국기를 골라야 해요. 처음엔 잘 알려진 나라부터, 점점 비슷하게 생긴 국기가 섞여 나와요.',art:`<svg viewBox="0 0 100 100"><g transform="translate(10 14)"><rect width="50" height="34" rx="4" fill="#fff" stroke="#dee2e6" stroke-width="1.5"/><circle cx="25" cy="17" r="9" fill="#e03131"/></g><g transform="translate(40 52)"><rect width="50" height="34" rx="4" fill="#fff"/><rect width="17" height="34" rx="4" fill="#1c4ed8"/><rect x="33" width="17" height="34" rx="4" fill="#e03131"/><rect x="13" width="6" height="34" fill="#1c4ed8"/><rect x="31" width="6" height="34" fill="#e03131"/></g></svg>`,run:flags},
@@ -962,7 +962,7 @@ const NEWS={
  scales:{added:'2026-11-21'},seq:{added:'2026-11-21'},maze:{added:'2026-11-21',updated:'2026-11-23',note:'깃발 칸 크기가 다른 칸과 같아졌어요'},hanoi:{added:'2026-11-21',updated:'2026-11-23',note:'원판 수를 줄이고 힌트와 놓을 수 있는 기둥 표시가 생겼어요'},rotate:{added:'2026-11-21'},
  diff:{added:'2026-11-21'},count:{added:'2026-11-21'},shadow:{added:'2026-11-21'},posmem:{added:'2026-11-21',updated:'2026-11-23',note:'시간 대신 목숨 3개로 바뀌었어요'},newitem:{added:'2026-11-21',updated:'2026-11-23',note:'시간 대신 목숨 3개로 바뀌었어요'},backdig:{added:'2026-11-21',updated:'2026-11-23',note:'시간 대신 목숨 3개로 바뀌었어요'},wordmem:{added:'2026-11-21',updated:'2026-11-23',note:'시간 대신 목숨 3개로 바뀌었어요'},ox:{added:'2026-11-21'},
  chainw:{added:'2026-11-21'},spell:{added:'2026-11-21'},proverb:{added:'2026-11-21'},antonym:{added:'2026-11-21'},idiom:{added:'2026-11-21'},scramble:{added:'2026-11-21'},engq:{added:'2026-11-21'},
- frog:{added:'2026-11-22'},mahjong:{added:'2026-11-22'},catch:{added:'2026-11-23'},
+ frog:{added:'2026-11-22'},mahjong:{added:'2026-11-22'},catch:{added:'2026-11-23'},hoop:{added:'2026-11-23'},
  path:{updated:'2026-11-23',note:'돌멩이 블록이 생겼어요. 가운데 점프 버튼으로 한 칸 뛰어넘으세요'},
  jump:{updated:'2026-11-21',note:'맨 아래 발판에서 출발하고, 시간 제한 없이 목숨 3개로 바뀌었어요'},
  stack:{updated:'2026-11-21',note:'시간 제한 없이, 블록을 놓치면 바로 끝나요'},
@@ -1803,6 +1803,66 @@ function blocks(c){
  deal();paint();
 }
 /* --- 픽셀 지우기 --- */
+function hoop(c){
+ c.prompt('공을 손가락으로 위로 밀어 던지세요');
+ c.el.innerHTML='<div class="cvwrap"><canvas style="height:min(470px,calc(100svh - 250px));min-height:380px" aria-label="농구 화면"></canvas><div class="combo" id="cb"></div></div><p class="bhint">세게 밀수록 멀리 날아가요 · 골대를 향해 똑바로!</p>';
+ const {cv,x,W,H}=canvasIn(c.el),cb=c.el.querySelector('#cb');
+ const G=9.8,BR=.12,RR=.3,RH=1.25,FLOOR=-1.5,Z0=.9,TH=.92,f=Math.min(W*1.25,H*1.05),hy=H*.46,camY=.38;
+ const sp=()=>.8+(S()-.6)*.5;
+ const P=(px,py,pz)=>({x:W/2+px*f/pz,y:hy-(py-camY)*f/pz,s:f/pz});
+ const need=(hx,hz)=>{const d=Math.hypot(hx,hz-Z0);return Math.sqrt(G*d*d/(2*Math.cos(TH)**2*(d*Math.tan(TH)-RH)))};
+ const VREF=need(0,4);
+ let hx=0,hz=4,hbx=0,mv=0,ph=0,made=0,streak=0,ball,drag=null,guide=0,msgT=0,net=0,last=performance.now(),dead=false;
+ const say=t=>{cb.textContent=t;cb.style.opacity=1;cb.classList.remove('pop');void cb.offsetWidth;cb.classList.add('pop');clearTimeout(say.t);say.t=setTimeout(()=>cb.style.opacity=0,900)};
+ const reset=()=>{ball={x:0,y:0,z:Z0,vx:0,vy:0,vz:0,fly:false,done:false,in:false,rim:false,t:0,rot:0}};reset();
+ const place=()=>{const lv=Math.floor(made/3);if(lv===0){hbx=0;hz=4;mv=0}else if(lv===1){hbx=(Math.random()*2-1)*.6;hz=4+Math.random()*.6;mv=0}else{hbx=(Math.random()*2-1)*.3;hz=3.8+Math.random()*1.2;mv=Math.min(.6+lv*.15,1.4)}};
+ const aim=(dxp,dyp)=>{const p=-dyp/(H*.42);let v=p*VREF,phi=Math.atan2(dxp,-dyp)*.8;
+  const vs=need(hx,hz),ps=Math.atan2(hx,hz-Z0),ev=v/vs-1,ea=phi-ps;
+  if(Math.abs(ev)<.13)v=vs*(1+ev*.25);if(Math.abs(ea)<.13)phi=ps+ea*.25;return{v,phi}};
+ const shoot=(v,phi)=>{Object.assign(ball,{fly:true,vy:v*Math.sin(TH),vx:v*Math.cos(TH)*Math.sin(phi),vz:v*Math.cos(TH)*Math.cos(phi)})};
+ c.setHint(()=>{if(guide)return false;guide=1;say('점선을 따라 던져 보세요')});
+ const pos=e=>{const r=cv.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top]};
+ cv.onpointerdown=e=>{e.preventDefault();if(ball.fly||dead)return;const [px,py]=pos(e),b=P(ball.x,ball.y,ball.z);if(Math.hypot(px-b.x,py-b.y)>BR*b.s*2.2&&py<H*.6)return;cv.setPointerCapture&&cv.setPointerCapture(e.pointerId);drag={sx:px,sy:py,x:px,y:py}};
+ cv.onpointermove=e=>{if(!drag)return;const [px,py]=pos(e);drag.x=px;drag.y=py};
+ cv.onpointerup=cv.onpointercancel=e=>{if(!drag)return;const dx=drag.x-drag.sx,dy=drag.y-drag.sy;drag=null;if(dy>-25){say('위로 밀어 주세요');return}const a=aim(dx,dy);shoot(a.v,a.phi)};
+ const finish=()=>{if(ball.in){made++;streak++;let n=2;if(!ball.rim){n++;say(streak>=3?`깔끔한 슛! ${streak}연속`:'깔끔한 슛!')}else say(streak>=3?`골인! ${streak}연속`:'골인!');if(streak>=3)n++;c.ok(n);place()}
+  else{streak=0;c.bad();say(ball.rim?'아깝다! 림에 맞았어요':'안 들어갔어요')}if(guide)guide=0;reset()};
+ const ballDraw=(b)=>{const p=P(b.x,b.y,b.z),r=BR*p.s;
+  const sh=P(b.x,FLOOR,b.z);x.fillStyle='rgba(0,0,0,.18)';x.beginPath();x.ellipse(sh.x,sh.y,r*1.1,r*.35,0,0,7);x.fill();
+  const g=x.createRadialGradient(p.x-r*.35,p.y-r*.35,r*.1,p.x,p.y,r);g.addColorStop(0,'#ffa94d');g.addColorStop(1,'#d9480f');x.fillStyle=g;x.beginPath();x.arc(p.x,p.y,r,0,7);x.fill();
+  x.save();x.beginPath();x.arc(p.x,p.y,r,0,7);x.clip();x.strokeStyle='#5c1a00';x.lineWidth=Math.max(1,r*.07);x.translate(p.x,p.y);x.rotate(b.rot);
+  x.beginPath();x.moveTo(-r,0);x.lineTo(r,0);x.moveTo(0,-r);x.lineTo(0,r);x.stroke();x.beginPath();x.ellipse(-r*.95,0,r*.5,r*1.05,0,0,7);x.stroke();x.beginPath();x.ellipse(r*.95,0,r*.5,r*1.05,0,0,7);x.stroke();x.restore()};
+ const rim=(half)=>{const p=P(hx,RH,hz),rw=RR*p.s,rh=rw*.32;x.strokeStyle='#f03e3e';x.lineWidth=Math.max(2.5,p.s*.035);x.beginPath();if(half==='back')x.ellipse(p.x,p.y,rw,rh,0,Math.PI,2*Math.PI);else x.ellipse(p.x,p.y,rw,rh,0,0,Math.PI);x.stroke()};
+ const netDraw=()=>{const p=P(hx,RH,hz),q=P(hx,RH-.42,hz),rw=RR*p.s,rh=rw*.32,bw=rw*.55,sw=net>0?Math.sin(net*20)*rw*.08:0;x.strokeStyle='rgba(255,255,255,.95)';x.lineWidth=1.4;
+  for(let i=0;i<=8;i++){const a=Math.PI*i/8,tx=p.x+Math.cos(a)*rw,ty=p.y+Math.sin(a)*rh,bx=q.x+Math.cos(a)*bw+sw,by=q.y+Math.sin(a)*bw*.3;x.beginPath();x.moveTo(tx,ty);x.lineTo(bx,by);x.stroke()}
+  for(let k=1;k<=3;k++){const t=k/3.5,w=rw+(bw-rw)*t,yy=p.y+(q.y-p.y)*t;x.beginPath();x.ellipse(p.x+sw*t,yy,w,w*.3,0,0,Math.PI);x.stroke()}};
+ c.frame(()=>{const now=performance.now(),dt=Math.min(.033,(now-last)/1000)*sp();last=now;
+  ph+=dt;hx=mv?hbx+Math.sin(ph*mv)*.75:hbx;net=Math.max(0,net-dt*1.5);
+  if(ball.fly){const b=ball,py=b.y;b.t+=dt;b.vy-=G*dt;b.x+=b.vx*dt;b.y+=b.vy*dt;b.z+=b.vz*dt;b.rot+=dt*6;
+   const BZ=hz+RR+.12;if(b.vz>0&&b.z+BR>BZ&&b.y>RH-.25&&b.y<RH+1&&Math.abs(b.x-hx)<.9){b.z=BZ-BR;b.vz*=-.45;b.vx*=.7}
+   if(!b.done&&py>RH&&b.y<=RH&&b.vy<0){const d=Math.hypot(b.x-hx,b.z-hz);
+    if(d<RR-BR*.55){b.in=true;b.done=true;net=1;b.vx*=.2;b.vz*=.2;b.x=hx+(b.x-hx)*.6;b.z=hz+(b.z-hz)*.6}
+    else if(d<RR+BR){b.rim=true;if(d<RR&&Math.random()<.5){b.in=true;b.done=true;net=1;b.vx*=.2;b.vz*=.2}else{const k=(d||.01);b.vy=Math.abs(b.vy)*.45;b.vx+=(b.x-hx)/k*1.6;b.vz+=(b.z-hz)/k*1.6}}}
+   if(b.in&&b.y<RH-.1){b.x+=(hx-b.x)*Math.min(1,dt*10);b.z+=(hz-b.z)*Math.min(1,dt*10)}
+   if(b.y<FLOOR+BR){b.y=FLOOR+BR;b.vy=Math.abs(b.vy)*.5;b.vx*=.7;b.vz*=.7;if(!b.land)b.land=b.t}
+   if(b.land&&b.t-b.land>.45||b.t>3.2||b.z<.5)finish()}
+  // scene
+  const fl=P(0,FLOOR,hz+RR+.62);let g=x.createLinearGradient(0,0,0,fl.y);g.addColorStop(0,'#e7f0ff');g.addColorStop(1,'#c5d3ef');x.fillStyle=g;x.fillRect(0,0,W,fl.y);
+  g=x.createLinearGradient(0,fl.y,0,H);g.addColorStop(0,'#e9c58f');g.addColorStop(1,'#d39a58');x.fillStyle=g;x.fillRect(0,fl.y,W,H-fl.y);x.fillStyle='#b9c6e2';x.fillRect(0,fl.y-4,W,4);x.strokeStyle='rgba(255,255,255,.7)';x.lineWidth=2;
+  const k1=P(-1.8,FLOOR,hz-1.6),k2=P(1.8,FLOOR,hz-1.6),k3=P(1.8,FLOOR,hz+1.2),k4=P(-1.8,FLOOR,hz+1.2);x.beginPath();x.moveTo(k1.x,k1.y);x.lineTo(k4.x,k4.y);x.lineTo(k3.x,k3.y);x.lineTo(k2.x,k2.y);x.stroke();
+  // pole & board
+  const BZ=hz+RR+.12,pb=P(hx,FLOOR,BZ+.5),pt=P(hx,RH+.3,BZ+.5);x.fillStyle='#868e96';x.fillRect(pb.x-pb.s*.05,pt.y,pb.s*.1,pb.y-pt.y);
+  const b1=P(hx-.9,RH+1,BZ),b2=P(hx+.9,RH-.25,BZ);x.fillStyle='rgba(255,255,255,.93)';x.strokeStyle='#495057';x.lineWidth=3;x.beginPath();x.roundRect?x.roundRect(b1.x,b1.y,b2.x-b1.x,b2.y-b1.y,6):x.rect(b1.x,b1.y,b2.x-b1.x,b2.y-b1.y);x.fill();x.stroke();
+  const s1=P(hx-.3,RH+.45,BZ),s2=P(hx+.3,RH,BZ);x.strokeStyle='#f03e3e';x.lineWidth=2.5;x.strokeRect(s1.x,s1.y,s2.x-s1.x,s2.y-s1.y);
+  const ra=P(hx,RH,BZ),rb=P(hx,RH,hz+RR);x.strokeStyle='#f03e3e';x.lineWidth=3;x.beginPath();x.moveTo(ra.x,ra.y);x.lineTo(rb.x,rb.y);x.stroke();
+  // guide
+  if(guide&&!ball.fly){const vs=need(hx,hz),ps=Math.atan2(hx,hz-Z0);x.fillStyle='rgba(255,212,59,.95)';for(let t=.08;t<1.6;t+=.08){const yy=vs*Math.sin(TH)*t-G*t*t/2,zz=Z0+vs*Math.cos(TH)*Math.cos(ps)*t,xx=vs*Math.cos(TH)*Math.sin(ps)*t;if(zz>hz)break;const q=P(xx,yy,zz);x.beginPath();x.arc(q.x,q.y,3,0,7);x.fill()}
+   const b0=P(0,0,Z0),len=vs/VREF*H*.42;x.strokeStyle='rgba(255,212,59,.6)';x.lineWidth=6;x.setLineDash([8,8]);x.beginPath();x.moveTo(b0.x,b0.y);x.lineTo(b0.x+Math.sin(ps/.8)*len,b0.y-Math.cos(ps/.8)*len);x.stroke();x.setLineDash([])}
+  const behind=ball.z>hz;rim('back');if(behind){ballDraw(ball);netDraw();rim('front')}else{netDraw();rim('front');ballDraw(ball)}
+  if(drag){const b0=P(ball.x,ball.y,ball.z);x.strokeStyle='rgba(32,201,151,.85)';x.lineWidth=5;x.lineCap='round';x.beginPath();x.moveTo(b0.x,b0.y);x.lineTo(b0.x+(drag.x-drag.sx),b0.y+(drag.y-drag.sy));x.stroke()}
+  if(!ball.fly&&!drag&&made===0&&!guide){const b0=P(0,0,Z0),o=(now/600%1)*40;x.globalAlpha=1-o/40;x.font='28px sans-serif';x.textAlign='center';x.fillText('👆',b0.x,b0.y+20-o);x.globalAlpha=1}
+ });
+}
 function fruitCatch(c){
  c.prompt('과일은 받고, 폭탄은 피하세요!');
  c.el.innerHTML='<div class="cvwrap"><canvas aria-label="과일 받기 화면"></canvas><div class="hearts" id="hp"></div><div class="combo" id="cb"></div></div><div class="ctrl"><button class="btn" data-d="-1">◀</button><button class="btn" data-d="1">▶</button></div>';
