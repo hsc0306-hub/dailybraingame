@@ -412,6 +412,12 @@ button{font:inherit;color:inherit}
 .maze{display:grid;width:100%;max-width:360px;aspect-ratio:1;background:#fff;border-radius:14px;padding:6px;box-shadow:0 7px 0 #cdd5ea;touch-action:none}
 .maze i{position:relative;display:grid;place-items:center;min-width:0;min-height:0;overflow:hidden;border:0 solid #2b3350}
 .maze i .emo{position:absolute;inset:0;display:grid;place-items:center;font-size:min(20px,4.6vw);line-height:1}
+.arw{display:grid;gap:10px;justify-items:center}
+.arw .drops{justify-self:start;font-size:24px;letter-spacing:4px}.arw .drops .off{opacity:.18;filter:grayscale(1)}.arw .drops.shake{animation:shake .4s}
+#asv{width:min(100%,460px);aspect-ratio:1;touch-action:none;border-radius:18px;box-shadow:var(--sh)}
+#asv .ag polyline{fill:none;stroke:#6b4a2b;stroke-width:.13;stroke-linecap:round;stroke-linejoin:round}#asv .ag polygon{fill:#6b4a2b}
+#asv .ag.bump polyline{stroke:#e03131}#asv .ag.bump polygon{fill:#e03131}
+#asv .ag.hintA polyline{stroke:#f59f00;stroke-width:.2}#asv .ag.hintA polygon{fill:#f59f00}
 .mlives{text-align:center;font-weight:900;font-size:17px;color:#fa5252;margin:-6px 0 8px;letter-spacing:.05em}
 .mlives.shake{animation:shake .4s}
 .ctrl.three{grid-template-columns:1fr .8fr 1fr}
@@ -805,7 +811,7 @@ function bindTop(){
 
 const GOAL=5;
 /* --- 능력치 --- */
-const REF={hoop:30,catch:50,mole:45,sort:40,match:30,pairs:30,hand:35,path:80,big:35,color:30,stack:40,jump:40,miss:30,shop:25,nback:40,simon:30,rps:35,ice:30,lotto:30,frog:60,mahjong:40,type:60,potion:35,blocks:80,pixel:150,chosung:30,wordfind:40,flags:35,capitals:35,puzzle:40,hidden:40,blank:35,sumg:50,change:20,chain:20,clock:20,coins:20,balloon:30,bbq:25,lights:30,stroop:35,cipher:40,schulte:40,rhythm:60,scales:30,seq:30,maze:40,hanoi:30,rotate:30,diff:30,count:25,shadow:35,posmem:30,newitem:30,backdig:20,wordmem:30,ox:40,chainw:25,spell:25,proverb:30,antonym:25,idiom:30,scramble:40,engq:30};
+const REF={arrows:60,hoop:30,catch:50,mole:45,sort:40,match:30,pairs:30,hand:35,path:80,big:35,color:30,stack:40,jump:40,miss:30,shop:25,nback:40,simon:30,rps:35,ice:30,lotto:30,frog:60,mahjong:40,type:60,potion:35,blocks:80,pixel:150,chosung:30,wordfind:40,flags:35,capitals:35,puzzle:40,hidden:40,blank:35,sumg:50,change:20,chain:20,clock:20,coins:20,balloon:30,bbq:25,lights:30,stroop:35,cipher:40,schulte:40,rhythm:60,scales:30,seq:30,maze:40,hanoi:30,rotate:30,diff:30,count:25,shadow:35,posmem:30,newitem:30,backdig:20,wordmem:30,ox:40,chainw:25,spell:25,proverb:30,antonym:25,idiom:30,scramble:40,engq:30};
 const SPDB=[1,1.1,1.2];
 const CATS=['집중력','사고력','관찰력','기억력','계산력','언어력'];
 const ability=id=>{const h=store.get('hist_'+id,[]);return h.length?Math.max(...h.slice(-5)):null};
@@ -932,7 +938,7 @@ const GAMES=[
 {id:'scales',cat:'사고력',name:'무게 비교',how:'저울을 보고 어느 쪽이 더 무거운지 따져서, 가장 무거운(또는 가벼운) 것을 고르세요. 아래로 기운 쪽이 더 무거워요.',art:'<span class="emo" style="font-size:50px">⚖️</span>',run:scales},
 {id:'seq',cat:'사고력',name:'규칙 찾기',how:'2, 4, 6, 8, ? 처럼 숫자가 늘어서는 규칙을 찾아 ?에 들어갈 수를 고르세요.',art:'<span style="font-size:28px;font-weight:900;color:#1b2240;line-height:1.15">2 4 6 <span style="color:#f03e3e">?</span></span>',run:seqG},
 {id:'maze',cat:'사고력',name:'미로 탈출',time:90,how:'화살표 버튼을 누르거나 미로 위를 손가락으로 밀어서 깃발까지 가세요. 탈출할 때마다 미로가 커져요.',art:'<span class="emo" style="font-size:46px">🏁</span>',run:maze},
-{id:'hanoi',cat:'사고력',name:'하노이탑',time:120,how:'왼쪽 기둥의 원판을 모두 오른쪽 기둥으로 옮기세요. 기둥을 눌러 맨 위 원판을 고르고, 옮길 기둥을 누르면 돼요. 큰 원판은 작은 원판 위에 올릴 수 없어요. 최소 횟수로 끝내면 보너스! 막히면 💡힌트로 다음 수를 알려줘요.',art:'<span style="font-size:34px;font-weight:900;color:#1b2240;line-height:1.15"><svg viewBox="0 0 100 70" width="90"><rect x="18" y="10" width="4" height="50" fill="#868e96"/><rect x="48" y="10" width="4" height="50" fill="#868e96"/><rect x="78" y="10" width="4" height="50" fill="#868e96"/><rect x="4" y="50" width="32" height="10" rx="4" fill="#ff6b6b"/><rect x="9" y="40" width="22" height="10" rx="4" fill="#4dabf7"/><rect x="14" y="30" width="12" height="10" rx="4" fill="#ffd43b"/></svg></span>',run:hanoi},
+{id:'arrows',cat:'사고력',name:'화살표 퍼즐',noTimer:true,how:'화살표를 누르면 머리가 가리키는 방향으로 쭉 빠져나가요. 앞에 다른 화살표가 있으면 부딪혀서 💧물방울이 하나 줄어요(3개). 빠져나갈 수 있는 순서를 잘 생각해서 화살표를 모두 없애면 다음 레벨! 화살표 1개당 1점, 레벨 통과 5점. 💡힌트를 쓰면 지금 뺄 수 있는 화살표를 알려줘요.',art:`<svg viewBox="0 0 100 100"><rect x="8" y="8" width="84" height="84" rx="10" fill="#f6ecdc"/><g fill="none" stroke="#6b4a2b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 30h26v-12"/><path d="M80 22v30H58"/><path d="M22 78V48h22v18h12"/><path d="M66 80h14V66"/></g><g fill="#6b4a2b"><path d="M46 10l-6 9h12z"/><path d="M50 52l9-6v12z"/><path d="M64 66l-9-6v12z"/><path d="M80 58l-6 9h12z"/></g></svg>`,run:arrowOut},{id:'hanoi',cat:'사고력',name:'하노이탑',time:120,how:'왼쪽 기둥의 원판을 모두 오른쪽 기둥으로 옮기세요. 기둥을 눌러 맨 위 원판을 고르고, 옮길 기둥을 누르면 돼요. 큰 원판은 작은 원판 위에 올릴 수 없어요. 최소 횟수로 끝내면 보너스! 막히면 💡힌트로 다음 수를 알려줘요.',art:'<span style="font-size:34px;font-weight:900;color:#1b2240;line-height:1.15"><svg viewBox="0 0 100 70" width="90"><rect x="18" y="10" width="4" height="50" fill="#868e96"/><rect x="48" y="10" width="4" height="50" fill="#868e96"/><rect x="78" y="10" width="4" height="50" fill="#868e96"/><rect x="4" y="50" width="32" height="10" rx="4" fill="#ff6b6b"/><rect x="9" y="40" width="22" height="10" rx="4" fill="#4dabf7"/><rect x="14" y="30" width="12" height="10" rx="4" fill="#ffd43b"/></svg></span>',run:hanoi},
 {id:'rotate',cat:'사고력',name:'도형 회전',how:'빨간 도형을 <b>돌리기만</b> 해서 만들 수 있는 모양을 고르세요. 뒤집은 모양은 정답이 아니에요.',art:'<span style="font-size:34px;font-weight:900;color:#1b2240;line-height:1.15"><svg viewBox="0 0 70 70" width="70"><g fill="#f03e3e"><rect x="22" y="2" width="20" height="20" rx="3"/><rect x="44" y="2" width="20" height="20" rx="3"/><rect x="0" y="24" width="20" height="20" rx="3"/><rect x="22" y="24" width="20" height="20" rx="3"/><rect x="22" y="46" width="20" height="20" rx="3"/></g></svg></span>',run:rotateG},
 {id:'diff',cat:'관찰력',name:'다른 그림 찾기',how:'위아래 두 판에서 그림이 다른 칸 하나를 찾아 누르세요.',art:'<span class="emo" style="font-size:30px">🍎🍊<br>🍎<span style="opacity:.5">🍋</span></span>',run:diffG},
 {id:'count',cat:'관찰력',name:'개수 세기',how:'여러 그림이 섞여 있어요. 물어보는 그림이 모두 몇 개인지 세어서 고르세요.',art:'<span class="emo" style="font-size:30px">🍎🍌<br>🍎🍇</span>',run:countG},
@@ -965,7 +971,7 @@ const NEWS={
  scales:{added:'2026-11-21'},seq:{added:'2026-11-21'},maze:{added:'2026-11-21',updated:'2026-11-23',note:'깃발 칸 크기가 다른 칸과 같아졌어요'},hanoi:{added:'2026-11-21',updated:'2026-11-23',note:'원판 수를 줄이고 힌트와 놓을 수 있는 기둥 표시가 생겼어요'},rotate:{added:'2026-11-21'},
  diff:{added:'2026-11-21'},count:{added:'2026-11-21'},shadow:{added:'2026-11-21'},posmem:{added:'2026-11-21',updated:'2026-11-23',note:'시간 대신 목숨 3개로 바뀌었어요'},newitem:{added:'2026-11-21',updated:'2026-11-23',note:'시간 대신 목숨 3개로 바뀌었어요'},backdig:{added:'2026-11-21',updated:'2026-11-23',note:'시간 대신 목숨 3개로 바뀌었어요'},wordmem:{added:'2026-11-21',updated:'2026-11-23',note:'시간 대신 목숨 3개로 바뀌었어요'},ox:{added:'2026-11-21'},
  chainw:{added:'2026-11-21'},spell:{added:'2026-11-21'},proverb:{added:'2026-11-21'},antonym:{added:'2026-11-21'},idiom:{added:'2026-11-21'},scramble:{added:'2026-11-21'},engq:{added:'2026-11-21'},
- frog:{added:'2026-11-22'},mahjong:{added:'2026-11-22'},catch:{added:'2026-11-23'},hoop:{added:'2026-11-23'},
+ frog:{added:'2026-11-22'},mahjong:{added:'2026-11-22'},catch:{added:'2026-11-23'},hoop:{added:'2026-11-23'},arrows:{added:'2026-11-23'},
  path:{updated:'2026-11-23',note:'돌멩이 블록이 생겼어요. 가운데 점프 버튼으로 한 칸 뛰어넘으세요'},
  jump:{updated:'2026-11-21',note:'맨 아래 발판에서 출발하고, 시간 제한 없이 목숨 3개로 바뀌었어요'},
  stack:{updated:'2026-11-21',note:'시간 제한 없이, 블록을 놓치면 바로 끝나요'},
@@ -1818,6 +1824,58 @@ function blocks(c){
  deal();paint();
 }
 /* --- 픽셀 지우기 --- */
+function arrowOut(c){
+ const DIRS=[[1,0],[-1,0],[0,1],[0,-1]];
+ let lv=0,lives=3,dead=false,N,occ,AR,anims=[],hintId=-1,gid=0;
+ c.el.innerHTML='<div class="arw"><div class="drops" id="dr"></div><svg id="asv" aria-label="화살표 퍼즐"></svg><p class="bhint">화살표를 누르면 머리 방향으로 빠져나가요. 앞이 막혀 있으면 물방울이 줄어요!</p></div>';
+ const sv=c.el.querySelector('#asv'),dr=c.el.querySelector('#dr'),NS='http://www.w3.org/2000/svg';
+ const showL=()=>dr.innerHTML='<span>💧</span>'.repeat(lives)+'<span class="off">💧</span>'.repeat(Math.max(0,3-lives));showL();
+ c.setLife(()=>{if(dead)return false;lives++;showL()});
+ const inB=(x,y)=>x>=0&&y>=0&&x<N&&y<N;
+ const rayFree=(a,ignoreSelf)=>{const h=a.p[a.p.length-1];let x=h[0]+a.d[0],y=h[1]+a.d[1],k=1;while(inB(x,y)){const o=occ[y][x];if(o>=0&&o!==a.id)return k;x+=a.d[0];y+=a.d[1];k++}return 0};
+ const gen=()=>{anims=[];hintId=-1;N=Math.min(10,5+lv);occ=Array.from({length:N},()=>Array(N).fill(-1));AR=[];
+  const Lmax=Math.min(8,3+lv);
+  for(let t=0;t<900&&AR.filter(a=>a).reduce((s,a)=>s+a.p.length,0)<N*N*.86;t++){
+   const sx=rnd(N),sy=rnd(N);if(occ[sy][sx]>=0)continue;
+   const p=[[sx,sy]],used=new Set([sx+','+sy]);let dir=pick(DIRS);
+   const want=2+rnd(Lmax-1);
+   while(p.length<want){const [x,y]=p[p.length-1];const opts=shuffle(DIRS).sort((a,b)=>(b===dir)-(a===dir)+(Math.random()<.45?0:0));
+    let moved=false;for(const d of (Math.random()<.55?[dir,...shuffle(DIRS)]:shuffle(DIRS))){const nx=x+d[0],ny=y+d[1];if(inB(nx,ny)&&occ[ny][nx]<0&&!used.has(nx+','+ny)){p.push([nx,ny]);used.add(nx+','+ny);dir=d;moved=true;break}}
+    if(!moved)break}
+   for(let k=p.length;k>=2;k--){const q=p.slice(0,k),h=q[k-1],n=q[k-2],d=[h[0]-n[0],h[1]-n[1]];
+    let x=h[0]+d[0],y=h[1]+d[1],ok=true;const own=new Set(q.map(v=>v+''));while(inB(x,y)){if(occ[y][x]>=0||own.has(x+','+y)){ok=false;break}x+=d[0];y+=d[1]}
+    if(ok){const id=AR.length;AR.push({id,p:q,d});q.forEach(([x,y])=>occ[y][x]=id);break}}}
+  draw()};
+ const pts=a=>a.p.map(([x,y])=>[x+.5,y+.5]);
+ const at=(P,s)=>{const i=Math.max(0,Math.min(P.length-2,Math.floor(s))),f=s-i;return[P[i][0]+(P[i+1][0]-P[i][0])*f,P[i][1]+(P[i+1][1]-P[i][1])*f]};
+ const sub=(P,a,b)=>{const o=[at(P,a)];for(let i=Math.ceil(a+1e-6);i<b;i++)o.push(P[i]);o.push(at(P,b));return o};
+ const head=(q,d)=>{const [x,y]=q[q.length-1],k=.3,w=.22;return `${x+d[0]*k},${y+d[1]*k} ${x-d[1]*w-d[0]*.05},${y+d[0]*w-d[1]*.05} ${x+d[1]*w-d[0]*.05},${y-d[0]*w-d[1]*.05}`};
+ const setShape=(a,q)=>{a.pl.setAttribute('points',q.map(v=>v.join(',')).join(' '));a.hd.setAttribute('points',head(q,a.d))};
+ function draw(){sv.setAttribute('viewBox',`-.3 -.3 ${N+.6} ${N+.6}`);sv.innerHTML=`<rect x="-.3" y="-.3" width="${N+.6}" height="${N+.6}" rx=".3" fill="#f6ecdc"/>`;
+  AR.forEach(a=>{const g=document.createElementNS(NS,'g');g.setAttribute('class','ag');const pl=document.createElementNS(NS,'polyline'),hd=document.createElementNS(NS,'polygon');g.append(pl,hd);sv.append(g);a.g=g;a.pl=pl;a.hd=hd;setShape(a,pts(a))});
+  c.prompt(`레벨 ${lv+1} · 화살표 ${AR.filter(a=>!a.gone).length}개`)}
+ const left=()=>AR.filter(a=>!a.gone).length;
+ const tapAt=(px,py)=>{let best=null,bd=.5;AR.forEach(a=>{if(a.gone||a.moving)return;const P=pts(a);for(let i=0;i<P.length-1;i++){const [x1,y1]=P[i],[x2,y2]=P[i+1],t=Math.max(0,Math.min(1,((px-x1)*(x2-x1)+(py-y1)*(y2-y1))/((x2-x1)**2+(y2-y1)**2))),dd=Math.hypot(px-(x1+(x2-x1)*t),py-(y1+(y2-y1)*t));if(dd<bd){bd=dd;best=a}}});return best};
+ sv.onpointerdown=e=>{e.preventDefault();if(dead)return;const r=sv.getBoundingClientRect(),s=(N+.6)/r.width,px=(e.clientX-r.left)*s-.3,py=(e.clientY-r.top)*s-.3;const a=tapAt(px,py);if(!a)return;go(a)};
+ const go=a=>{if(hintId>=0){AR[hintId]&&AR[hintId].g.classList.remove('hintA');hintId=-1}
+  const P=pts(a),L=P.length-1,blk=rayFree(a);
+  const ext=P.slice();const d=a.d;let [x,y]=P[P.length-1];
+  const far=blk?blk-.62:N+L+2;for(let k=0;k<Math.ceil(far)+1;k++){x+=d[0];y+=d[1];ext.push([x,y])}
+  a.moving=true;
+  if(!blk){a.p.forEach(([x,y])=>occ[y][x]=-1);a.gone=true;c.ok(1);
+   const myG=gid;anims.push({a,ext,L,t:0,to:far,sp:9*S()+4,done:()=>{a.g.remove();a.moving=false;c.prompt(`레벨 ${lv+1} · 화살표 ${left()}개`);if(!left()&&!dead&&!anims.some(m=>!m.back)&&gid===myG){gid++;c.ok(5);c.prompt('🎉 레벨 통과! +5');lv++;c.later(gen,1100)}}})}
+  else{a.g.classList.add('bump');anims.push({a,ext,L,t:0,to:Math.max(.25,far),sp:8,back:true,done:()=>{a.moving=false;a.g.classList.remove('bump');}});
+   lives--;showL();c.bad();dr.classList.remove('shake');void dr.offsetWidth;dr.classList.add('shake');
+   if(lives<=0){dead=true;c.prompt('물방울을 다 썼어요');c.later(c.end,1600)}}};
+ let last=performance.now();
+ c.frame(()=>{const now=performance.now(),dt=Math.min(.05,(now-last)/1000);last=now;
+  for(let i=anims.length-1;i>=0;i--){const m=anims[i];
+   if(m.back&&m.rev){m.t-=dt*m.sp;if(m.t<=0){m.t=0;setShape(m.a,sub(m.ext,0,m.L));anims.splice(i,1);m.done();continue}}
+   else{m.t+=dt*m.sp;if(m.t>=m.to){m.t=m.to;if(m.back)m.rev=true;else{anims.splice(i,1);m.done();continue}}}
+   setShape(m.a,sub(m.ext,m.t,m.t+m.L))}});
+ c.setHint(()=>{const f=AR.find(a=>!a.gone&&!a.moving&&!rayFree(a));if(!f)return false;hintId=f.id;f.g.classList.add('hintA')});
+ gen();
+}
 function hoop(c){
  c.prompt('공을 손가락으로 위로 밀어 던지세요');
  c.el.innerHTML='<div class="cvwrap"><canvas style="height:min(470px,calc(100svh - 250px));min-height:380px" aria-label="농구 화면"></canvas><div class="combo" id="cb"></div></div><p class="bhint">세게 밀수록 멀리 날아가요 · 골대를 향해 똑바로!</p>';
